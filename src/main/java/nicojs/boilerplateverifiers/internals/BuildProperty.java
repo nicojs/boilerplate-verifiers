@@ -22,43 +22,53 @@ public class BuildProperty {
     private Object expectedValue;
 
     public void assertValue(Object buildResult) {
-        Result result = retrieveValueFromGetter(buildResult);
+        ResultValue result = retrieveValueFromGetter(buildResult);
         if (!result.succeeded) {
-            result = retrieveValueFromField(buildResult);
+            result = retrieveValueFromField(buildResult, buildResult.getClass());
         }
         if (!result.succeeded) {
-            fail("Could not find the corresponding field (or getter) for builder method \"%s\".");
+            fail(String.format("Could not find the corresponding field (or getter) for builder method \"%s\".", builderMethod.getName()));
         }
         assertThat(String.format("Value used to build was not equal to value after build for property \"%s\".", builderMethod.getName()),
                 result.getValue(), is(expectedValue));
     }
 
-    private Result retrieveValueFromField(Object buildResult) {
-        Result result;
-        Field field = tryGetField(buildResult);
-        if (field == null) {
-            result = new Result(false);
-        } else {
-            field.setAccessible(true);
-            Object value = null;
-            try {
-                value = field.get(buildResult);
-            } catch (IllegalAccessException e) {
-                fail(String.format("Field \"%s\" is not accessible (is it public?).", field.getName()));
+    /**
+     * Recursive function to retrieve the actual value from a field
+     * This function is recursive, because it might need to retrieve the field from a
+     * private attribute of one of its parent classes
+     * @param buildResult The actual value of the object that was build
+     * @param clazz The class on which the field need to be found
+     * @return An object containing the resulting value
+     */
+    private ResultValue retrieveValueFromField(Object buildResult, Class<?> clazz) {
+        ResultValue result = new ResultValue(false);
+        if(clazz != null) {
+            Field field = tryGetField(clazz);
+            if (field != null) {
+                field.setAccessible(true);
+                Object value = null;
+                try {
+                    value = field.get(buildResult);
+                } catch (IllegalAccessException e) {
+                    fail(String.format("Field \"%s\" of class \"%s\" is not accessible (is it public?).", field.getName(), clazz.getSimpleName()));
+                }
+                result = new ResultValue(true, value);
             }
-            result = new Result(true, value);
+            if (!result.succeeded) {
+                result = retrieveValueFromField(buildResult, clazz.getSuperclass());
+            }
         }
-
         return result;
     }
 
-    private Result retrieveValueFromGetter(Object buildResult) {
+    private ResultValue retrieveValueFromGetter(Object buildResult) {
         String getterName = getterName();
         Method getter = tryGetGetter(buildResult, getterName);
-        Result result;
+        ResultValue result;
         Object actualValue = null;
         if (getter == null) {
-            result = new Result(false);
+            result = new ResultValue(false);
         } else {
             assertThat(String.format("Found getter \"%s\" should not accept parameter(s).", getterName), getter.getParameterCount(), is(0));
             try {
@@ -68,15 +78,15 @@ public class BuildProperty {
             } catch (IllegalAccessException e) {
                 fail(String.format("Getter \"%s\" is not accessible (is it public?).", getterName));
             }
-            result = new Result(true, actualValue);
+            result = new ResultValue(true, actualValue);
         }
         return result;
     }
 
     @Value
     @AllArgsConstructor
-    private static class Result {
-        private Result(boolean succeeded) {
+    private static class ResultValue {
+        private ResultValue(boolean succeeded) {
             this(succeeded, null);
         }
 
@@ -84,9 +94,9 @@ public class BuildProperty {
         private Object value;
     }
 
-    private Field tryGetField(Object buildResult) {
+    private Field tryGetField(Class<?> clazz) {
         try {
-            return buildResult.getClass().getDeclaredField(builderMethod.getName());
+            return clazz.getDeclaredField(builderMethod.getName());
         } catch (NoSuchFieldException e) {
             return null;
         }

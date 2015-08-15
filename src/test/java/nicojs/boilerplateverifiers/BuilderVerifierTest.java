@@ -4,8 +4,10 @@ import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
+import nicojs.boilerplateverifiers.examples.lombok.PrimitiveBag;
 import nicojs.boilerplateverifiers.examples.lombok.Book;
 import nicojs.boilerplateverifiers.examples.lombok.CollectionContainer;
+import nicojs.boilerplateverifiers.examples.lombok.Employee;
 import nicojs.boilerplateverifiers.examples.lombok.NoGetter;
 import nicojs.boilerplateverifiers.examples.lombok.Person;
 import nicojs.boilerplateverifiers.examples.lombok.Switch;
@@ -97,6 +99,28 @@ public class BuilderVerifierTest {
             assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"man\""));
         }
         assertThat(caught, is(true));
+    }
+
+    @Test
+    public void verify_withDifferentBuilderName_fails(){
+        try{
+            BuilderVerifier.of(Employee.class).verify();
+        }catch (AssertionError error){
+            assertThat(error.getMessage(), is("No method found called \"builder\", did you call it differently?"));
+        }
+    }
+
+    @Test
+    public void verify_withInheritance_passes(){
+        BuilderVerifier.of(Employee.class)
+                .usingBuilderMethod("buildEmployee")
+                .verify();
+    }
+
+    @Test
+    public void verify_allPrimitiveAttributesWithLombok_passes(){
+        BuilderVerifier.of(PrimitiveBag.class)
+                .verify();
     }
 
 }

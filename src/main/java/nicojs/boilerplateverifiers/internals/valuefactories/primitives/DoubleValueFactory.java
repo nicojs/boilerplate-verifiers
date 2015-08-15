@@ -7,7 +7,7 @@ import nicojs.boilerplateverifiers.internals.ValueFactory;
  * Created by nicojs on 8/13/2015.
  */
 public class DoubleValueFactory extends ValueFactory{
-    private double seed = 0;
+    private double seed = Double.MIN_VALUE;
 
     public DoubleValueFactory() {
         super(double.class);

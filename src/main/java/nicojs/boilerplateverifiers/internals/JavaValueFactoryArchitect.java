@@ -4,10 +4,7 @@ import nicojs.boilerplateverifiers.internals.valuefactories.collections.ArrayLis
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.CopyOnWriteArrayListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.LinkedListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.ListValueFactory;
-import nicojs.boilerplateverifiers.internals.valuefactories.primitives.BooleanValueFactory;
-import nicojs.boilerplateverifiers.internals.valuefactories.primitives.DoubleValueFactory;
-import nicojs.boilerplateverifiers.internals.valuefactories.primitives.IntValueFactory;
-import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.primitives.*;
 
 /**
  * Represents a JavaValueFactoryArchitect
@@ -31,10 +28,15 @@ public class JavaValueFactoryArchitect {
 
     private static void fillPrimitiveClasses(ValueFactories valueFactories) {
         valueFactories.putIfNotExists(
-                new IntValueFactory(),
+                new BooleanValueFactory(),
+                new ByteValueFactory(),
+                new CharValueFactory(),
+                new ClassValueFactory(),
                 new DoubleValueFactory(),
-                new StringValueFactory(),
-                new BooleanValueFactory()
-        );
+                new FloatValueFactory(),
+                new IntValueFactory(),
+                new LongValueFactory(),
+                new ShortValueFactory(),
+                new StringValueFactory());
     }
 }

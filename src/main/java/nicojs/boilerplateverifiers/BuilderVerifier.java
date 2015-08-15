@@ -21,7 +21,7 @@ import static org.junit.Assert.fail;
  */
 public class BuilderVerifier {
 
-    private static final String BUILDER_METHOD_NAME = "builder";
+    private String builderMethodName = "builder";
     private static final String BUILD_METHOD_NAME = "build";
     private static final List<String> METHOD_BLACK_LIST = Arrays.asList(BUILD_METHOD_NAME,
             "toString", "equals", "hashCode", "notify", "notifyAll", "getClass", "wait");
@@ -39,7 +39,6 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
     }
 
-    @SuppressWarnings("NullArgumentToVariableArgMethod")
     public void verify() {
         instantiateBuilder();
         populateBuilder();
@@ -53,6 +52,7 @@ public class BuilderVerifier {
         }
     }
 
+    @SuppressWarnings("NullArgumentToVariableArgMethod")
     private void build() {
         try {
             Method build = builder.getClass().getDeclaredMethod(BUILD_METHOD_NAME);
@@ -62,7 +62,7 @@ public class BuilderVerifier {
         } catch (NoSuchMethodException e) {
             fail(String.format("No method called \"%s\" found on \"%s\".", BUILD_METHOD_NAME, builder.getClass().getSimpleName()));
         } catch (InvocationTargetException e) {
-            fail(String.format("Method \"%s\" could not be invoked on builder class \"%s\".", BUILDER_METHOD_NAME, builder.getClass().getSimpleName()));
+            fail(String.format("Method \"%s\" could not be invoked on builder class \"%s\".", builderMethodName, builder.getClass().getSimpleName()));
         } catch (IllegalAccessException e) {
             fail(String.format("Method \"%s\" is not accessible on builder class \"%s\".", BUILD_METHOD_NAME, builder.getClass().getSimpleName()));
         }
@@ -70,15 +70,15 @@ public class BuilderVerifier {
 
     private void instantiateBuilder() {
         try {
-            Method builderMethod = targetClass.getDeclaredMethod(BUILDER_METHOD_NAME, null);
+            Method builderMethod = targetClass.getDeclaredMethod(builderMethodName, null);
             builder = builderMethod.invoke(null);
 
         } catch (NoSuchMethodException e) {
-            fail(String.format("No method found called \"%s\", did you call it differently?", BUILDER_METHOD_NAME));
+            fail(String.format("No method found called \"%s\", did you call it differently?", builderMethodName));
         } catch (InvocationTargetException e) {
-            fail(String.format("Method \"%s\" could not be invoked. Is it static?", BUILDER_METHOD_NAME));
+            fail(String.format("Method \"%s\" could not be invoked. Is it static?", builderMethodName));
         } catch (IllegalAccessException e) {
-            fail(String.format("Method \"%s\" is not accessible.", BUILDER_METHOD_NAME));
+            fail(String.format("Method \"%s\" is not accessible.", builderMethodName));
         }
     }
 
@@ -120,5 +120,8 @@ public class BuilderVerifier {
         return new BuilderVerifier(clazz);
     }
 
-
+    public BuilderVerifier usingBuilderMethod(String builderMethodName) {
+        this.builderMethodName = builderMethodName;
+        return this;
+    }
 }

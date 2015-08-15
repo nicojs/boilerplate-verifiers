@@ -11,6 +11,21 @@ import java.util.Map;
  * Created by nicojs on 8/13/2015.
  */
 public class ValueFactories {
+
+    private final static Map<Class, Class> SIMPLIFICATION_MAP;
+
+    static{
+        SIMPLIFICATION_MAP = new HashMap<>();
+        SIMPLIFICATION_MAP.put(Boolean.class, boolean.class);
+        SIMPLIFICATION_MAP.put(Byte.class, byte.class);
+        SIMPLIFICATION_MAP.put(Character.class, char.class);
+        SIMPLIFICATION_MAP.put(Double.class, double.class);
+        SIMPLIFICATION_MAP.put(Float.class, float.class);
+        SIMPLIFICATION_MAP.put(Integer.class, int.class);
+        SIMPLIFICATION_MAP.put(Long.class, long.class);
+        SIMPLIFICATION_MAP.put(Short.class, short.class);
+    }
+
     private Map<Class, ValueFactory> factoryMap;
 
     public ValueFactories() {
@@ -19,16 +34,25 @@ public class ValueFactories {
 
     @SuppressWarnings("unchecked")
     public ValueFactory get(Class clazz) {
-        ValueFactory valueFactory = factoryMap.get(clazz);
+        Class simplifiedClass = simplify(clazz);
+        ValueFactory valueFactory = factoryMap.get(simplifiedClass);
         if (valueFactory == null) {
-            if (clazz.isEnum()) {
-                valueFactory = new EnumValueFactory(clazz);
+            if (simplifiedClass.isEnum()) {
+                valueFactory = new EnumValueFactory(simplifiedClass);
             } else {
-                valueFactory = new ClassValueFactory(clazz, this);
+                valueFactory = new ClassValueFactory(simplifiedClass, this);
             }
-            factoryMap.put(clazz, valueFactory);
+            factoryMap.put(simplifiedClass, valueFactory);
         }
         return valueFactory;
+    }
+
+    private Class simplify(Class clazz) {
+        Class simpleClass = SIMPLIFICATION_MAP.get(clazz);
+        if(simpleClass == null){
+            simpleClass = clazz;
+        }
+        return simpleClass;
     }
 
     public Object provideNextValue(Class clazz) {
