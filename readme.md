@@ -1,6 +1,7 @@
 Boilerplate verifiers for Java
 ==============================
 *Unit test your boilerplate without more boilerplate*
+git 
 **Boilerplate verifiers** can be used in Java unit tests to verify whether 
 the **builder**, **toString**, **getters/setters** are correctly implemented.
 
