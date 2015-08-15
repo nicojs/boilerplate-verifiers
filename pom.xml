@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nicojs</groupId>
-    <artifactId>verifiers</artifactId>
+    <artifactId>boilerplate-verifiers</artifactId>
     <version>0.0.0-SNAPSHOT</version>
 
     <properties>
