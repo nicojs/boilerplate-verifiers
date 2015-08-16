@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
+import nicojs.boilerplateverifiers.examples.lombok.FinalAttribute;
 import nicojs.boilerplateverifiers.examples.lombok.PrimitiveBag;
 import nicojs.boilerplateverifiers.examples.lombok.Book;
 import nicojs.boilerplateverifiers.examples.lombok.CollectionContainer;
@@ -120,6 +121,12 @@ public class BuilderVerifierTest {
     @Test
     public void verify_allPrimitiveAttributesWithLombok_passes(){
         BuilderVerifier.of(PrimitiveBag.class)
+                .verify();
+    }
+
+    @Test
+    public void verify_classWithFinalComplexAttributeAndLombokBuilder_passes(){
+        BuilderVerifier.of(FinalAttribute.class)
                 .verify();
     }
 
