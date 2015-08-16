@@ -4,18 +4,47 @@ import nicojs.boilerplateverifiers.internals.valuefactories.collections.ArrayLis
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.CopyOnWriteArrayListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.LinkedListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.ListValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.maps.*;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents a JavaValueFactoryArchitect
  * Created by nicojs on 8/13/2015.
  */
+@SuppressWarnings("unchecked")
 public class JavaValueFactoryArchitect {
-    private JavaValueFactoryArchitect(){}
+    private JavaValueFactoryArchitect() {
+    }
 
-    public static void fill(ValueFactories valueFactories){
+    public static void fill(ValueFactories valueFactories) {
         fillPrimitiveClasses(valueFactories);
         fillCollectionClasses(valueFactories);
+        fillMapClasses(valueFactories);
+    }
+
+    private static void fillMapClasses(ValueFactories valueFactories) {
+        valueFactories.putIfNotExists(
+                new ConcurrentHashMapValueFactory(),
+                new ConcurrentNavigableMapValueFactory(),
+                new EnumMapValueFactory(),
+                new HashMapValueFactory(),
+                new HashtableValueFactory(),
+                new LinkedHashMapValueFactory(),
+                new NavigableMapValueFactory(),
+                new PropertiesValueFactory(),
+                new SortedMapValueFactory(),
+                new TreeMapValueFactory(),
+                new WeakHashMapValueFactory(),
+                new MapValueFactory(Map.class, new Producer() {
+                    @Override
+                    public Object produce() {
+                        return new HashMap();
+                    }
+                })
+        );
     }
 
     private static void fillCollectionClasses(ValueFactories valueFactories) {
@@ -28,6 +57,7 @@ public class JavaValueFactoryArchitect {
 
     private static void fillPrimitiveClasses(ValueFactories valueFactories) {
         valueFactories.putIfNotExists(
+                new AtomicIntegerValueFactory(),
                 new BooleanValueFactory(),
                 new ByteValueFactory(),
                 new CharValueFactory(),

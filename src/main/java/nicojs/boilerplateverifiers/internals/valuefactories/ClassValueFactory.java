@@ -5,8 +5,7 @@ import nicojs.boilerplateverifiers.internals.ValueFactories;
 import nicojs.boilerplateverifiers.internals.ValueFactory;
 
 import java.lang.reflect.Field;
-
-import static junit.framework.TestCase.fail;
+import java.lang.reflect.Modifier;
 
 /**
  * Represents a ClassValueFactory
@@ -33,14 +32,21 @@ public class ClassValueFactory<T> extends ValueFactory<T> {
     private void scramble(T newInstance) {
         Class<?> clazz = newInstance.getClass();
         for (Field field : clazz.getDeclaredFields()) {
-            field.setAccessible(true);
-            try {
-                field.set(newInstance, otherValueFactories.provideNextValue(field.getType()));
-            } catch (IllegalAccessException e) {
-                fail(String.format("Could not set field \"%s\" of class \"%s\", which necessary to instantiate a unique value of the class.",
-                        field.getName(), clazz));
+            if(!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
+                field.setAccessible(true);
+                try {
+                    field.set(newInstance, otherValueFactories.provideNextValue(field.getType()));
+                } catch (IllegalAccessException e) {
+                    throw new AssertionError(String.format("Could not set field \"%s\" of class \"%s\", which is necessary to instantiate a unique value of class \"%s\".",
+                            field.getName(), field.getType().getSimpleName(), clazz.getSimpleName()), e);
+                }
             }
         }
 
+    }
+
+    private boolean isReserved(String fieldName) {
+        // Compiled inner classes have the this property as this$0
+        return fieldName.contains("$");
     }
 }

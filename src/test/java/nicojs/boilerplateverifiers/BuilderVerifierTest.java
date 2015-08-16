@@ -3,15 +3,9 @@ package nicojs.boilerplateverifiers;
 import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
+import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
-import nicojs.boilerplateverifiers.examples.lombok.FinalAttribute;
-import nicojs.boilerplateverifiers.examples.lombok.PrimitiveBag;
-import nicojs.boilerplateverifiers.examples.lombok.Book;
-import nicojs.boilerplateverifiers.examples.lombok.CollectionContainer;
-import nicojs.boilerplateverifiers.examples.lombok.Employee;
-import nicojs.boilerplateverifiers.examples.lombok.NoGetter;
-import nicojs.boilerplateverifiers.examples.lombok.Person;
-import nicojs.boilerplateverifiers.examples.lombok.Switch;
+import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -91,7 +85,7 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void verify_classWithCollectionsAndLWrongAssignmentInBuilder_fails(){
+    public void verify_classWithCollectionsAndWrongAssignmentInBuilder_fails(){
         boolean caught = false;
         try{
             BuilderVerifier.of(ErrorCollectionContainer.class).verify();
@@ -101,6 +95,24 @@ public class BuilderVerifierTest {
         }
         assertThat(caught, is(true));
     }
+
+    @Test
+    public void verify_classWithMapsAndLombokGeneratedBuilder_passes(){
+        BuilderVerifier.of(MapContainer.class).verify();
+    }
+
+    @Test
+    public void verify_classWithMapsAndWrongAssignmentInBuilder_fails(){
+        boolean caught = false;
+        try{
+            BuilderVerifier.of(ErrorMapContainer.class).verify();
+        }catch(AssertionError error){
+            caught = true;
+            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"map\""));
+        }
+        assertThat(caught, is(true));
+    }
+
 
     @Test
     public void verify_withDifferentBuilderName_fails(){
@@ -130,4 +142,9 @@ public class BuilderVerifierTest {
                 .verify();
     }
 
+    @Test
+    public void verify_classWithComplexAttributeWhichHasAStaticFieldAndLombokBuilder_passes(){
+        BuilderVerifier.of(ClassWithAttributeWichHasStaticField.class)
+                .verify();
+    }
 }
