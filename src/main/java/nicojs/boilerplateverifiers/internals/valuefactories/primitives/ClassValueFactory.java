@@ -17,7 +17,13 @@ public class ClassValueFactory extends ChoiceValueFactory<Class> {
                 Float.class,
                 Long.class,
                 Boolean.class,
-                Short.class
+                Short.class,
+                int.class,
+                double.class,
+                float.class,
+                long.class,
+                boolean.class,
+                short.class
         });
     }
 }

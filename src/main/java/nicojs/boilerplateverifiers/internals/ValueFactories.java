@@ -1,6 +1,6 @@
 package nicojs.boilerplateverifiers.internals;
 
-import nicojs.boilerplateverifiers.internals.valuefactories.ClassValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.ComplexObjectValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.EnumValueFactory;
 
 import java.util.HashMap;
@@ -40,7 +40,7 @@ public class ValueFactories {
             if (simplifiedClass.isEnum()) {
                 valueFactory = new EnumValueFactory(simplifiedClass);
             } else {
-                valueFactory = new ClassValueFactory(simplifiedClass, this);
+                valueFactory = new ComplexObjectValueFactory(simplifiedClass, this);
             }
             factoryMap.put(simplifiedClass, valueFactory);
         }
