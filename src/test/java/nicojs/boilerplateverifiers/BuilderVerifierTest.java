@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
+import nicojs.boilerplateverifiers.examples.errors.ErrorSetContainer;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
@@ -113,6 +114,22 @@ public class BuilderVerifierTest {
         assertThat(caught, is(true));
     }
 
+    @Test
+    public void verify_classWithSetsAndLombokGeneratedBuilder_passes(){
+        BuilderVerifier.of(SetContainer.class).verify();
+    }
+
+    @Test
+    public void verify_classWithSetsAndWrongAssignment_fails(){
+        boolean caught = false;
+        try{
+            BuilderVerifier.of(ErrorSetContainer.class).verify();
+        }catch(AssertionError error){
+            caught = true;
+            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"set\""));
+        }
+        assertThat(caught, is(true));
+    }
 
     @Test
     public void verify_withDifferentBuilderName_fails(){
@@ -147,4 +164,5 @@ public class BuilderVerifierTest {
         BuilderVerifier.of(ClassWithAttributeWichHasStaticField.class)
                 .verify();
     }
+
 }

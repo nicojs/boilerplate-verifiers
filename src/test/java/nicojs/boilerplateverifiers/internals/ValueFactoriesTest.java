@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.core.Is.is;
@@ -38,12 +39,28 @@ public class ValueFactoriesTest {
     }
 
     @Test
-    public void provideNextValue_first2ValuesOfBoolean_areUnique(){
+    public void provideNextValue_first100ValuesOfSetClasses_areUnique() {
+        for (Class clazz : new Class[]{
+                BitSet.class,
+                CopyOnWriteArraySet.class,
+                EnumSet.class,
+                HashSet.class,
+                NavigableSet.class,
+                Set.class,
+                SortedSet.class,
+                TreeSet.class
+        }){
+            assertFirst100ValuesAreUnique(clazz);
+        }
+    }
+
+    @Test
+    public void provideNextValue_first2ValuesOfBoolean_areUnique() {
         assertValuesAreUnique(boolean.class, 2);
     }
 
     @Test
-    public void provideNextValue_first10ValuesOfClass_areUnique(){
+    public void provideNextValue_first10ValuesOfClass_areUnique() {
         assertValuesAreUnique(Class.class, 10);
     }
 

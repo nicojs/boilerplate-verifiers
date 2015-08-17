@@ -6,6 +6,14 @@ import nicojs.boilerplateverifiers.internals.valuefactories.collections.LinkedLi
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.ListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.maps.*;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.*;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.BitSetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.CopyOnWriteArraySetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.EnumSetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.HashSetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.NavigableSetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.SetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.SortedSetValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.sets.TreeSetValueFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +31,7 @@ public class JavaValueFactoryArchitect {
         fillPrimitiveClasses(valueFactories);
         fillCollectionClasses(valueFactories);
         fillMapClasses(valueFactories);
+        fillSetClasses(valueFactories);
     }
 
     private static void fillMapClasses(ValueFactories valueFactories) {
@@ -68,5 +77,18 @@ public class JavaValueFactoryArchitect {
                 new LongValueFactory(),
                 new ShortValueFactory(),
                 new StringValueFactory());
+    }
+
+    private static void fillSetClasses(ValueFactories valueFactories) {
+        valueFactories.putIfNotExists(
+                new BitSetValueFactory(),
+                new CopyOnWriteArraySetValueFactory(),
+                new EnumSetValueFactory(),
+                new HashSetValueFactory(),
+                new NavigableSetValueFactory(),
+                new SetValueFactory(),
+                new SortedSetValueFactory(),
+                new TreeSetValueFactory()
+        );
     }
 }

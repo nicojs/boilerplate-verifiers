@@ -32,7 +32,7 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
     private void scramble(T newInstance) {
         Class<?> clazz = newInstance.getClass();
         for (Field field : clazz.getDeclaredFields()) {
-            if(!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
+            if (!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
                 field.setAccessible(true);
                 try {
                     field.set(newInstance, otherValueFactories.provideNextValue(field.getType()));
