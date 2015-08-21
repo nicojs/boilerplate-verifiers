@@ -6,6 +6,7 @@ import nicojs.boilerplateverifiers.internals.valuefactories.collections.LinkedLi
 import nicojs.boilerplateverifiers.internals.valuefactories.collections.ListValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.maps.*;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.*;
+import nicojs.boilerplateverifiers.internals.valuefactories.queues.*;
 import nicojs.boilerplateverifiers.internals.valuefactories.sets.BitSetValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.sets.CopyOnWriteArraySetValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.sets.EnumSetValueFactory;
@@ -32,6 +33,7 @@ public class JavaValueFactoryArchitect {
         fillCollectionClasses(valueFactories);
         fillMapClasses(valueFactories);
         fillSetClasses(valueFactories);
+        fillQueueClasses(valueFactories);
     }
 
     private static void fillMapClasses(ValueFactories valueFactories) {
@@ -89,6 +91,22 @@ public class JavaValueFactoryArchitect {
                 new SetValueFactory(),
                 new SortedSetValueFactory(),
                 new TreeSetValueFactory()
+        );
+    }
+
+    private static void fillQueueClasses(ValueFactories valueFactories) {
+        valueFactories.putIfNotExists(
+                new ArrayBlockingQueueValueFactory(),
+                new BlockingDequeValueFactory(),
+                new BlockingQueueValueFactory(),
+                new ConcurrentLinkedQueueValueFactory(),
+                new ConcurrentLinkedDequeueValueFactory(),
+                new DelayQueueValueFactory(),
+                new DequeValueFactory(),
+                new LinkedBlockingQueueValueFactory(),
+                new PriorityBlockingQueueValueFactory(),
+                new QueueValueFactory(),
+                new SynchronousQueueValueFactory()
         );
     }
 }

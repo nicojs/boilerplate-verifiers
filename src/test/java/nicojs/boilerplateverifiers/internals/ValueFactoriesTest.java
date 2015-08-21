@@ -43,7 +43,6 @@ public class ValueFactoriesTest {
         for (Class clazz : new Class[]{
                 BitSet.class,
                 CopyOnWriteArraySet.class,
-                EnumSet.class,
                 HashSet.class,
                 NavigableSet.class,
                 Set.class,
@@ -52,6 +51,7 @@ public class ValueFactoriesTest {
         }){
             assertFirst100ValuesAreUnique(clazz);
         }
+        assertValuesAreUnique(EnumSet.class, 10);
     }
 
     @Test

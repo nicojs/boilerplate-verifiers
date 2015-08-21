@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
+import nicojs.boilerplateverifiers.examples.errors.ErrorQueueContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorSetContainer;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
 import nicojs.boilerplateverifiers.examples.lombok.*;
@@ -132,12 +133,19 @@ public class BuilderVerifierTest {
     }
 
     @Test
+    public void verify_classWithQueuesAndLombokGeneratedBuilder_passes(){
+        BuilderVerifier.of(QueueContainer.class).verify();
+    }
+
+    @Test
+    public void verify_classWithQueuesWrongAssignment_fails(){
+        assertError(ErrorQueueContainer.class, "");
+    }
+
+
+    @Test
     public void verify_withDifferentBuilderName_fails(){
-        try{
-            BuilderVerifier.of(Employee.class).verify();
-        }catch (AssertionError error){
-            assertThat(error.getMessage(), is("No method found called \"builder\", did you call it differently?"));
-        }
+        assertError(Employee.class, "No method found called \"builder\", did you call it differently?");
     }
 
     @Test
@@ -165,4 +173,14 @@ public class BuilderVerifierTest {
                 .verify();
     }
 
+    private void assertError(Class clazz, String expectedSubstring) {
+        boolean caught = false;
+        try{
+            BuilderVerifier.of(clazz).verify();
+        }catch(AssertionError error){
+            assertThat(error.getMessage(), containsString(expectedSubstring));
+            caught = true;
+        }
+        assertThat(caught, is(true));
+    }
 }
