@@ -3,7 +3,6 @@ package nicojs.boilerplateverifiers;
 import nicojs.boilerplateverifiers.internals.BuildProperty;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
-import nicojs.boilerplateverifiers.internals.ValueFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -86,8 +85,7 @@ public class BuilderVerifier {
         for (Method method : builder.getClass().getMethods()) {
             if (isPropertySetter(method)) {
                 Class<?> propertyClass = findPropertyClass(method);
-                ValueFactory valueFactory = valueFactories.get(propertyClass);
-                Object value = valueFactory.next();
+                Object value = valueFactories.provideNextValue(propertyClass);
                 try {
                     method.setAccessible(true);
                     method.invoke(builder, value);

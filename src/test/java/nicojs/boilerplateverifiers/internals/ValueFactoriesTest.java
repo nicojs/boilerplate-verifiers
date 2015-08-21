@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers.internals;
 
+import nicojs.boilerplateverifiers.examples.lombok.ClassWithRecursiveAttribute;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,7 +89,7 @@ public class ValueFactoriesTest {
     }
 
     @Test
-    public void provideNextValue_first100ValuesOfMapClasses_areUnique() {
+    public void provideNextValue_ofMapClasses_first100ValuesAreUnique() {
         for (Class clazz : new Class[]{ConcurrentHashMap.class,
                 EnumMap.class,
                 HashMap.class,
@@ -102,6 +103,11 @@ public class ValueFactoriesTest {
                 WeakHashMap.class}) {
             assertFirst100ValuesAreUnique(clazz);
         }
+    }
+
+    @Test
+    public void provideNextValue_classWithRecursiveAttribute_first100ValuesAreUnique(){
+        assertFirst100ValuesAreUnique(ClassWithRecursiveAttribute.class);
     }
 
     private void assertFirst100ValuesAreUnique(Class clazz) {

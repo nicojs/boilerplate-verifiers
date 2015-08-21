@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.internals;
 
 import nicojs.boilerplateverifiers.internals.valuefactories.ComplexObjectValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.EnumValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.InvocationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class ValueFactories {
 
     private final static Map<Class, Class> SIMPLIFICATION_MAP;
+    private final InvocationContext context;
 
     static{
         SIMPLIFICATION_MAP = new HashMap<>();
@@ -30,6 +32,7 @@ public class ValueFactories {
 
     public ValueFactories() {
         factoryMap = new HashMap<>();
+        context = new InvocationContext();
     }
 
     @SuppressWarnings("unchecked")
@@ -40,7 +43,7 @@ public class ValueFactories {
             if (simplifiedClass.isEnum()) {
                 valueFactory = new EnumValueFactory(simplifiedClass);
             } else {
-                valueFactory = new ComplexObjectValueFactory(simplifiedClass, this);
+                valueFactory = new ComplexObjectValueFactory(simplifiedClass, this, context);
             }
             factoryMap.put(simplifiedClass, valueFactory);
         }

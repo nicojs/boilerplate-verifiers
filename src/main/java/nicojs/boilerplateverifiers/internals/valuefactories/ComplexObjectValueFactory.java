@@ -14,10 +14,12 @@ import java.lang.reflect.Modifier;
 public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
 
     private final ValueFactories otherValueFactories;
+    private final InvocationContext context;
 
-    public ComplexObjectValueFactory(Class<T> targetClass, ValueFactories otherValueFactories) {
+    public ComplexObjectValueFactory(Class<T> targetClass, ValueFactories otherValueFactories, InvocationContext context) {
         super(targetClass);
         this.otherValueFactories = otherValueFactories;
+        this.context = context;
     }
 
     @SuppressWarnings("unchecked")
@@ -25,6 +27,7 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
     public T next() {
         Instantiator instantiator = Instantiator.of(getTargetClass());
         T newInstance = (T) instantiator.instantiate();
+        context.put(getTargetClass(), newInstance);
         scramble(newInstance);
         return newInstance;
     }
@@ -35,7 +38,7 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
             if (!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
                 field.setAccessible(true);
                 try {
-                    field.set(newInstance, otherValueFactories.provideNextValue(field.getType()));
+                    field.set(newInstance, provideValue(field));
                 } catch (IllegalAccessException e) {
                     throw new AssertionError(String.format("Could not set field \"%s\" of class \"%s\", which is necessary to instantiate a unique value of class \"%s\".",
                             field.getName(), field.getType().getSimpleName(), clazz.getSimpleName()), e);
@@ -43,6 +46,14 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
             }
         }
 
+    }
+
+    private Object provideValue(Field field) {
+        Object value = context.get(field.getType());
+        if (value == null) {
+            value = otherValueFactories.provideNextValue(field.getType());
+        }
+        return value;
     }
 
     private boolean isReserved(String fieldName) {
