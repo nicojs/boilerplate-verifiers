@@ -1,15 +1,19 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.internals.BuildProperty;
+import nicojs.boilerplateverifiers.internals.BuildPropertyAccessor;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -20,14 +24,13 @@ import static org.junit.Assert.fail;
  */
 public class BuilderVerifier {
 
-    private String builderMethodName = "builder";
     private static final String BUILD_METHOD_NAME = "build";
     private static final List<String> METHOD_BLACK_LIST = Arrays.asList(BUILD_METHOD_NAME,
             "toString", "equals", "hashCode", "notify", "notifyAll", "getClass", "wait");
-
+    private String builderMethodName = "builder";
     private Class<?> targetClass;
     private ValueFactories valueFactories;
-    private List<BuildProperty> buildProperties;
+    private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
     private Object buildResult;
 
@@ -38,15 +41,36 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
     }
 
+    public static BuilderVerifier of(Class<?> clazz) {
+        return new BuilderVerifier(clazz);
+    }
+
     public void verify() {
         instantiateBuilder();
+        inspectBuilderClass();
+        verifyTargetClassAttributes();
         populateBuilder();
         build();
         verifyBuildResult();
     }
 
+    private void verifyTargetClassAttributes() {
+        for (Field field : targetClass.getDeclaredFields()) {
+            if (!Modifier.isStatic(field.getModifiers())) {
+                BuildPropertyAccessor matchedBuildProperty = null;
+                for (BuildPropertyAccessor buildProperty : buildProperties) {
+                    if (buildProperty.getName().equals(field.getName())) {
+                        matchedBuildProperty = buildProperty;
+                    }
+                }
+                assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), add to ignore list if this is by design.",
+                        field.getName(), targetClass.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
+            }
+        }
+    }
+
     private void verifyBuildResult() {
-        for (BuildProperty buildProperty : buildProperties) {
+        for (BuildPropertyAccessor buildProperty : buildProperties) {
             buildProperty.assertValue(buildResult);
         }
     }
@@ -69,7 +93,7 @@ public class BuilderVerifier {
 
     private void instantiateBuilder() {
         try {
-            Method builderMethod = targetClass.getDeclaredMethod(builderMethodName, null);
+            Method builderMethod = targetClass.getDeclaredMethod(builderMethodName);
             builder = builderMethod.invoke(null);
 
         } catch (NoSuchMethodException e) {
@@ -81,25 +105,29 @@ public class BuilderVerifier {
         }
     }
 
-    private void populateBuilder() {
+    private void inspectBuilderClass() {
         for (Method method : builder.getClass().getMethods()) {
-            if (isPropertySetter(method)) {
-                Class<?> propertyClass = findPropertyClass(method);
-                Object value = valueFactories.provideNextValue(propertyClass);
-                try {
-                    method.setAccessible(true);
-                    method.invoke(builder, value);
-                } catch (IllegalAccessException e) {
-                    fail(String.format("Method \"%s\" on builder could not accessed.", method.getName()));
-                } catch (InvocationTargetException e) {
-                    fail(String.format("Method \"%s\" on builder could not be invoked. Is it static?", method.getName()));
-                }
-                buildProperties.add(new BuildProperty(method, value));
+            if (isNotBlacklisted(method)) {
+                buildProperties.add(new BuildPropertyAccessor(builder, method));
             }
         }
     }
 
-    private boolean isPropertySetter(Method method) {
+    private void populateBuilder() {
+        for (BuildPropertyAccessor buildProperty : buildProperties) {
+            Class<?> propertyClass = buildProperty.getPropertyClass();
+            Object value = valueFactories.provideNextValue(propertyClass);
+            try {
+                buildProperty.populate(value);
+            } catch (IllegalAccessException e) {
+                fail(String.format("Method \"%s\" on builder could not accessed.", buildProperty.getName()));
+            } catch (InvocationTargetException e) {
+                fail(String.format("Method \"%s\" on builder could not be invoked. Is it static?", buildProperty.getName()));
+            }
+        }
+    }
+
+    private boolean isNotBlacklisted(Method method) {
 
         if (!METHOD_BLACK_LIST.contains(method.getName())) {
             assertThat(String.format("Builder method \"%s\" should accept exactly one parameter.", method.getName()), method.getParameterCount(), is(1));
@@ -107,15 +135,6 @@ public class BuilderVerifier {
         } else {
             return false;
         }
-    }
-
-    private Class<?> findPropertyClass(Method method) {
-        return method.getParameterTypes()[0];
-    }
-
-
-    public static BuilderVerifier of(Class<?> clazz) {
-        return new BuilderVerifier(clazz);
     }
 
     public BuilderVerifier usingBuilderMethod(String builderMethodName) {

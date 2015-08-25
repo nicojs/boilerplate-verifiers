@@ -6,6 +6,7 @@ import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorQueueContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorSetContainer;
+import nicojs.boilerplateverifiers.examples.errors.NotAllAtributesCanBeBuild;
 import nicojs.boilerplateverifiers.examples.errors.Switches;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
@@ -171,6 +172,11 @@ public class BuilderVerifierTest {
     public void verify_classWithComplexAttributeWhichHasAStaticFieldAndLombokBuilder_passes(){
         BuilderVerifier.of(ClassWithAttributeWichHasStaticField.class)
                 .verify();
+    }
+
+    @Test
+    public void verify_classWhichDoesNotBuildAllAttributes_fails(){
+        assertError(NotAllAtributesCanBeBuild.class, "Missing build method for field \"attribute3\"");
     }
 
     private void assertError(Class clazz, String expectedSubstring) {
