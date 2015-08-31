@@ -89,14 +89,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithCollectionsAndWrongAssignmentInBuilder_fails(){
-        boolean caught = false;
-        try{
-            BuilderVerifier.of(ErrorCollectionContainer.class).verify();
-        }catch(AssertionError error){
-            caught = true;
-            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"man\""));
-        }
-        assertThat(caught, is(true));
+        assertTwoAttributesMixedUp(ErrorCollectionContainer.class, "man", "women");
     }
 
     @Test
@@ -106,14 +99,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithMapsAndWrongAssignmentInBuilder_fails(){
-        boolean caught = false;
-        try{
-            BuilderVerifier.of(ErrorMapContainer.class).verify();
-        }catch(AssertionError error){
-            caught = true;
-            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"map\""));
-        }
-        assertThat(caught, is(true));
+        assertTwoAttributesMixedUp(ErrorMapContainer.class, "map", "hashMap");
     }
 
     @Test
@@ -123,14 +109,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithSetsAndWrongAssignment_fails(){
-        boolean caught = false;
-        try{
-            BuilderVerifier.of(ErrorSetContainer.class).verify();
-        }catch(AssertionError error){
-            caught = true;
-            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"set\""));
-        }
-        assertThat(caught, is(true));
+        assertTwoAttributesMixedUp(ErrorSetContainer.class, "set", "hashSet");
     }
 
     @Test
@@ -189,4 +168,19 @@ public class BuilderVerifierTest {
         }
         assertThat(caught, is(true));
     }
+
+    private void assertTwoAttributesMixedUp(final Class<?> clazz, final String first, final String second) {
+        boolean caught = false;
+        try{
+            BuilderVerifier.of(clazz).verify();
+        }catch(AssertionError error){
+            caught = true;
+            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
+            boolean containsMap = error.getMessage().contains("\"" + first + "\"");
+            boolean containsHashMap = error.getMessage().contains("\"" + second + "\"");
+            assertThat(containsHashMap || containsMap, is(true));
+        }
+        assertThat(caught, is(true));
+    }
+
 }
