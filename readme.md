@@ -1,5 +1,8 @@
+[![Build Status](https://travis-ci.org/nicojs/boilerplate-verifiers.svg)](https://travis-ci.org/nicojs/boilerplate-verifiers)
+
 Boilerplate verifiers for Java
 ==============================
+
 *Unit test your boilerplate without more boilerplate*
 
 **Boilerplate verifiers** can be used in Java unit tests to verify whether 
