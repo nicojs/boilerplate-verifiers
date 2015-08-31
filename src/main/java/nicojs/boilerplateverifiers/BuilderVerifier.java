@@ -80,7 +80,7 @@ public class BuilderVerifier {
         try {
             Method build = builder.getClass().getDeclaredMethod(BUILD_METHOD_NAME);
             assertThat(String.format("Expected builder method \"%s\" on \"%s\" to accept no parameters.",
-                    BUILD_METHOD_NAME, builder.getClass().getSimpleName()), build.getParameterCount(), is(0));
+                    BUILD_METHOD_NAME, builder.getClass().getSimpleName()), build.getParameterTypes().length, is(0));
             buildResult = build.invoke(builder, null);
         } catch (NoSuchMethodException e) {
             fail(String.format("No method called \"%s\" found on \"%s\".", BUILD_METHOD_NAME, builder.getClass().getSimpleName()));
@@ -130,7 +130,7 @@ public class BuilderVerifier {
     private boolean isNotBlacklisted(Method method) {
 
         if (!METHOD_BLACK_LIST.contains(method.getName())) {
-            assertThat(String.format("Builder method \"%s\" should accept exactly one parameter.", method.getName()), method.getParameterCount(), is(1));
+            assertThat(String.format("Builder method \"%s\" should accept exactly one parameter.", method.getName()), method.getParameterTypes().length, is(1));
             return true;
         } else {
             return false;

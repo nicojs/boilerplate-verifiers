@@ -75,7 +75,7 @@ public class BuildPropertyAccessor {
         if (getter == null) {
             result = new ResultValue(false);
         } else {
-            assertThat(String.format("Found getter \"%s\" should not accept parameter(s).", getterName), getter.getParameterCount(), is(0));
+            assertThat(String.format("Found getter \"%s\" should not accept parameter(s).", getterName), getter.getParameterTypes().length, is(0));
             try {
                 actualValue = getter.invoke(buildResult);
             } catch (InvocationTargetException e) {
