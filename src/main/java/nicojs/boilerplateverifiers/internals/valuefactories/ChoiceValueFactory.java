@@ -28,7 +28,7 @@ public abstract class ChoiceValueFactory<T> extends ValueFactory<T> {
                 nextValue = values[seed];
                 seed++;
             } else {
-                // If the limit of the number of enum values is reached,
+                // If the limit forClass the number forClass enum values is reached,
                 // it is better to randomly retrieve a value.
                 // That way, there is a change to still catch errors
                 // The unit test will be 'flickering', sometimes green and sometimes red

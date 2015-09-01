@@ -9,10 +9,10 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
-        * Instantiates objects of a given class.
+        * Instantiates objects forClass a given class.
         *
-        * @param <T> {@link Instantiator} instantiates objects of this class, or of an
-        * 				anonymous subclass of this class.
+        * @param <T> {@link Instantiator} instantiates objects forClass this class, or forClass an
+        * 				anonymous subclass forClass this class.
         *
         * @author Jan Ouwens
         */
@@ -44,22 +44,22 @@ public class Instantiator<T> {
     }
 
     /**
-     * Instantiates an object of type T.
+     * Instantiates an object forClass type T.
      *
      * All fields will be initialized to their initial values.
      * I.e., 0 for ints, null for objects, etc.
      *
-     * @return An object of type T.
+     * @return An object forClass type T.
      */
     public T instantiate() {
         return objenesis.newInstance(type);
     }
 
     /**
-     * Instantiates an anonymous subclass of T. The subclass is
+     * Instantiates an anonymous subclass forClass T. The subclass is
      * generated dynamically.
      *
-     * @return An instance of an anonymous subclass of T.
+     * @return An instance forClass an anonymous subclass forClass T.
      */
     public T instantiateAnonymousSubclass() {
         Class<T> proxyClass = createDynamicSubclass(type);

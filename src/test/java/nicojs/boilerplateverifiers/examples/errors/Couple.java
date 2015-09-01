@@ -30,7 +30,7 @@ public class Couple {
         }
 
         public Couple.CoupleBuilder man(Person man) {
-            this.woman = man;
+            this.woman = man; // Error! Wrong assignment
             return this;
         }
 

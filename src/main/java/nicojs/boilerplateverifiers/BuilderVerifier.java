@@ -33,6 +33,7 @@ public class BuilderVerifier {
     private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
     private Object buildResult;
+    private List<String> attributeBlacklist;
 
     public BuilderVerifier(Class<?> targetClass) {
         this.targetClass = targetClass;
@@ -41,32 +42,49 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
     }
 
-    public static BuilderVerifier of(Class<?> clazz) {
+    public static BuilderVerifier forClass(Class<?> clazz) {
         return new BuilderVerifier(clazz);
+    }
+
+    public BuilderVerifier allAttributesShouldBeBuildExcept(String... attributeNames) {
+        attributeBlacklist = Arrays.asList(attributeNames);
+        return this;
     }
 
     public void verify() {
         instantiateBuilder();
         inspectBuilderClass();
-        verifyTargetClassAttributes();
+        verifyAllTargetClassAttributesCanBeBuild();
         populateBuilder();
         build();
         verifyBuildResult();
     }
 
-    private void verifyTargetClassAttributes() {
-        for (Field field : targetClass.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers())) {
-                BuildPropertyAccessor matchedBuildProperty = null;
-                for (BuildPropertyAccessor buildProperty : buildProperties) {
-                    if (buildProperty.getName().equals(field.getName())) {
-                        matchedBuildProperty = buildProperty;
+    private void verifyAllTargetClassAttributesCanBeBuild() {
+        verifyAllTargetClassAttributesCanBeBuild(targetClass);
+    }
+
+    private void verifyAllTargetClassAttributesCanBeBuild(Class clazz) {
+        if (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (isValidAttribute(field)) {
+                    BuildPropertyAccessor matchedBuildProperty = null;
+                    for (BuildPropertyAccessor buildProperty : buildProperties) {
+                        if (buildProperty.getName().equals(field.getName())) {
+                            matchedBuildProperty = buildProperty;
+                        }
                     }
+                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.",
+                            field.getName(), clazz.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
                 }
-                assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), add to ignore list if this is by design.",
-                        field.getName(), targetClass.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
             }
+            verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
         }
+    }
+
+    private boolean isValidAttribute(Field field) {
+        return !Modifier.isStatic(field.getModifiers())
+                && (attributeBlacklist == null || !attributeBlacklist.contains(field.getName()));
     }
 
     private void verifyBuildResult() {
@@ -118,7 +136,10 @@ public class BuilderVerifier {
             Class<?> propertyClass = buildProperty.getPropertyClass();
             Object value = valueFactories.provideNextValue(propertyClass);
             try {
-                buildProperty.populate(value);
+                Object builderInstance = buildProperty.populate(value);
+                assertThat(String.format("Builder method for \"%s\" does not return the instance of \"%s\". Add 'return this' as a final statement of the method.",
+                                buildProperty.getName(), this.builder.getClass().getSimpleName()),
+                        builderInstance, is(builder));
             } catch (IllegalAccessException e) {
                 fail(String.format("Method \"%s\" on builder could not accessed.", buildProperty.getName()));
             } catch (InvocationTargetException e) {

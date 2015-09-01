@@ -1,13 +1,7 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
-import nicojs.boilerplateverifiers.examples.errors.Couple;
-import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorQueueContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorSetContainer;
-import nicojs.boilerplateverifiers.examples.errors.NotAllAtributesCanBeBuild;
-import nicojs.boilerplateverifiers.examples.errors.Switches;
+import nicojs.boilerplateverifiers.examples.entities.AllAttributesBeingUsedExcept;
+import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
 
@@ -24,34 +18,27 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_flatClassWithLombokGeneratedBuilder_passes() {
-        BuilderVerifier.of(Person.class).verify();
+        BuilderVerifier.forClass(Person.class).verify();
     }
 
     @Test
     public void verify_complexClassWithLombokGeneratedBuilder_passes() {
-        BuilderVerifier.of(Book.class).verify();
+        BuilderVerifier.forClass(Book.class).verify();
     }
 
     @Test
     public void verify_classWithoutGetters_passes() {
-        BuilderVerifier.of(NoGetter.class).verify();
+        BuilderVerifier.forClass(NoGetter.class).verify();
     }
 
     @Test
     public void verify_complexClassWithWrongAssignment_fails() {
-        boolean caught = false;
-        try {
-            BuilderVerifier.of(Couple.class).verify();
-        } catch (AssertionError error) {
-            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"man\""));
-            caught = true;
-        }
-        assertThat(caught, is(true));
+        assertTwoAttributesMixedUp(Couple.class, "woman", "man");
     }
 
     @Test
     public void verify_classWithEnumWithLombokGeneratedBuilder_passes() {
-        BuilderVerifier.of(Switch.class).verify();
+        BuilderVerifier.forClass(Switch.class).verify();
     }
 
     @Test
@@ -59,7 +46,7 @@ public class BuilderVerifierTest {
         int numberOfTimesCaught = 0;
         for (int i = 0; i < 100; i++) {
             try {
-                BuilderVerifier.of(Switches.class).verify();
+                BuilderVerifier.forClass(Switches.class).verify();
             } catch (AssertionError error) {
                 assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"switch"));
                 numberOfTimesCaught++;
@@ -73,7 +60,7 @@ public class BuilderVerifierTest {
         int numberOfTimesCaught = 0;
         for (int i = 0; i < 100; i++) {
             try {
-                BuilderVerifier.of(BooleansWronglyAssigned.class).verify();
+                BuilderVerifier.forClass(BooleansWronglyAssigned.class).verify();
             } catch (AssertionError error) {
                 assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
                 numberOfTimesCaught++;
@@ -84,7 +71,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithCollectionsAndLombokGeneratedBuilder_passes(){
-        BuilderVerifier.of(CollectionContainer.class).verify();
+        BuilderVerifier.forClass(CollectionContainer.class).verify();
     }
 
     @Test
@@ -94,7 +81,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithMapsAndLombokGeneratedBuilder_passes(){
-        BuilderVerifier.of(MapContainer.class).verify();
+        BuilderVerifier.forClass(MapContainer.class).verify();
     }
 
     @Test
@@ -104,7 +91,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithSetsAndLombokGeneratedBuilder_passes(){
-        BuilderVerifier.of(SetContainer.class).verify();
+        BuilderVerifier.forClass(SetContainer.class).verify();
     }
 
     @Test
@@ -114,14 +101,13 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_classWithQueuesAndLombokGeneratedBuilder_passes(){
-        BuilderVerifier.of(QueueContainer.class).verify();
+        BuilderVerifier.forClass(QueueContainer.class).verify();
     }
 
     @Test
     public void verify_classWithQueuesWrongAssignment_fails(){
         assertError(ErrorQueueContainer.class, "");
     }
-
 
     @Test
     public void verify_withDifferentBuilderName_fails(){
@@ -130,26 +116,26 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_withInheritance_passes(){
-        BuilderVerifier.of(Employee.class)
+        BuilderVerifier.forClass(Employee.class)
                 .usingBuilderMethod("buildEmployee")
                 .verify();
     }
 
     @Test
     public void verify_allPrimitiveAttributesWithLombok_passes(){
-        BuilderVerifier.of(PrimitiveBag.class)
+        BuilderVerifier.forClass(PrimitiveBag.class)
                 .verify();
     }
 
     @Test
     public void verify_classWithFinalComplexAttributeAndLombokBuilder_passes(){
-        BuilderVerifier.of(FinalAttribute.class)
+        BuilderVerifier.forClass(FinalAttribute.class)
                 .verify();
     }
 
     @Test
     public void verify_classWithComplexAttributeWhichHasAStaticFieldAndLombokBuilder_passes(){
-        BuilderVerifier.of(ClassWithAttributeWichHasStaticField.class)
+        BuilderVerifier.forClass(ClassWithAttributeWichHasStaticField.class)
                 .verify();
     }
 
@@ -158,10 +144,33 @@ public class BuilderVerifierTest {
         assertError(NotAllAtributesCanBeBuild.class, "Missing build method for field \"attribute3\"");
     }
 
+    @Test
+    public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
+        BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
+        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.");
+    }
+
+    @Test
+    public void verify_builderAccessorDoesNotReturnBuilderInstance_fails(){
+        assertError(IncorrectBuilderPropertyAccessorReturnType.class, "Builder method for \"theAttribute\" does not return the instance of \"IncorrectBuilderPropertyAccessorReturnTypeBuilder\". Add 'return this' as a final statement of the method.");
+    }
+
+    @Test
+    public void verify_allAttributesBeingUsedExcept_passes(){
+        BuilderVerifier.forClass(AllAttributesBeingUsedExcept.class)
+                .allAttributesShouldBeBuildExcept("var2", "var3")
+                .verify();
+    }
+
     private void assertError(Class clazz, String expectedSubstring) {
+        BuilderVerifier builderVerifier = BuilderVerifier.forClass(clazz);
+        assertError(builderVerifier, expectedSubstring);
+    }
+
+    private void assertError(BuilderVerifier builderVerifier, String expectedSubstring) {
         boolean caught = false;
         try{
-            BuilderVerifier.of(clazz).verify();
+            builderVerifier.verify();
         }catch(AssertionError error){
             assertThat(error.getMessage(), containsString(expectedSubstring));
             caught = true;
@@ -172,7 +181,7 @@ public class BuilderVerifierTest {
     private void assertTwoAttributesMixedUp(final Class<?> clazz, final String first, final String second) {
         boolean caught = false;
         try{
-            BuilderVerifier.of(clazz).verify();
+            BuilderVerifier.forClass(clazz).verify();
         }catch(AssertionError error){
             caught = true;
             assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
