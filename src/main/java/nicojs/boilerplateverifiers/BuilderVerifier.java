@@ -33,6 +33,7 @@ public class BuilderVerifier {
     private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
     private Object buildResult;
+    private List<String> attributeBlacklist;
 
     public BuilderVerifier(Class<?> targetClass) {
         this.targetClass = targetClass;
@@ -43,6 +44,11 @@ public class BuilderVerifier {
 
     public static BuilderVerifier forClass(Class<?> clazz) {
         return new BuilderVerifier(clazz);
+    }
+
+    public BuilderVerifier allAttributesShouldBeBuildExcept(String... attributeNames) {
+        attributeBlacklist = Arrays.asList(attributeNames);
+        return this;
     }
 
     public void verify() {
@@ -61,19 +67,24 @@ public class BuilderVerifier {
     private void verifyAllTargetClassAttributesCanBeBuild(Class clazz) {
         if (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers())) {
+                if (isValidAttribute(field)) {
                     BuildPropertyAccessor matchedBuildProperty = null;
                     for (BuildPropertyAccessor buildProperty : buildProperties) {
                         if (buildProperty.getName().equals(field.getName())) {
                             matchedBuildProperty = buildProperty;
                         }
                     }
-                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), add to ignore list if this is by design.",
+                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.",
                             field.getName(), clazz.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
                 }
             }
             verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
         }
+    }
+
+    private boolean isValidAttribute(Field field) {
+        return !Modifier.isStatic(field.getModifiers())
+                && (attributeBlacklist == null || !attributeBlacklist.contains(field.getName()));
     }
 
     private void verifyBuildResult() {

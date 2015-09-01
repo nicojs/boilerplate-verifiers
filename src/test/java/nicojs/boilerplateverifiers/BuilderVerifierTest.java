@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers;
 
+import nicojs.boilerplateverifiers.examples.entities.AllAttributesBeingUsedExcept;
 import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
@@ -146,12 +147,19 @@ public class BuilderVerifierTest {
     @Test
     public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
         BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
-        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), add to ignore list if this is by design");
+        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.");
     }
 
     @Test
     public void verify_builderAccessorDoesNotReturnBuilderInstance_fails(){
         assertError(IncorrectBuilderPropertyAccessorReturnType.class, "Builder method for \"theAttribute\" does not return the instance of \"IncorrectBuilderPropertyAccessorReturnTypeBuilder\". Add 'return this' as a final statement of the method.");
+    }
+
+    @Test
+    public void verify_allAttributesBeingUsedExcept_passes(){
+        BuilderVerifier.forClass(AllAttributesBeingUsedExcept.class)
+                .allAttributesShouldBeBuildExcept("var2", "var3")
+                .verify();
     }
 
     private void assertError(Class clazz, String expectedSubstring) {

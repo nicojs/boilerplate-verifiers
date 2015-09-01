@@ -20,7 +20,7 @@ Work in progress:
   4. Support for inheritance in the builder classes themselves
   5. Verify that no attribute can be set after build.
   6. Support for more scenarios using settings
-    1. Support for attribute blacklist
+    1. ~~Support for attribute blacklist~~
     2. Support for builder method blacklist
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
