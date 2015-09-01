@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
 import nicojs.boilerplateverifiers.examples.errors.Couple;
+import nicojs.boilerplateverifiers.examples.errors.EmployeeCannotBuildParentAttributes;
 import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
 import nicojs.boilerplateverifiers.examples.errors.ErrorQueueContainer;
@@ -39,14 +40,7 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_complexClassWithWrongAssignment_fails() {
-        boolean caught = false;
-        try {
-            BuilderVerifier.forClass(Couple.class).verify();
-        } catch (AssertionError error) {
-            assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property \"man\""));
-            caught = true;
-        }
-        assertThat(caught, is(true));
+        assertTwoAttributesMixedUp(Couple.class, "woman", "man");
     }
 
     @Test
@@ -157,10 +151,21 @@ public class BuilderVerifierTest {
         assertError(NotAllAtributesCanBeBuild.class, "Missing build method for field \"attribute3\"");
     }
 
+    @Test
+    public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
+        BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
+        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), add to ignore list if this is by design");
+    }
+
     private void assertError(Class clazz, String expectedSubstring) {
+        BuilderVerifier builderVerifier = BuilderVerifier.forClass(clazz);
+        assertError(builderVerifier, expectedSubstring);
+    }
+
+    private void assertError(BuilderVerifier builderVerifier, String expectedSubstring) {
         boolean caught = false;
         try{
-            BuilderVerifier.forClass(clazz).verify();
+            builderVerifier.verify();
         }catch(AssertionError error){
             assertThat(error.getMessage(), containsString(expectedSubstring));
             caught = true;

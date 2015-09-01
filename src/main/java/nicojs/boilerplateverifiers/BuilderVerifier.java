@@ -48,24 +48,31 @@ public class BuilderVerifier {
     public void verify() {
         instantiateBuilder();
         inspectBuilderClass();
-        verifyTargetClassAttributes();
+        verifyAllTargetClassAttributesCanBeBuild();
         populateBuilder();
         build();
         verifyBuildResult();
     }
 
-    private void verifyTargetClassAttributes() {
-        for (Field field : targetClass.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers())) {
-                BuildPropertyAccessor matchedBuildProperty = null;
-                for (BuildPropertyAccessor buildProperty : buildProperties) {
-                    if (buildProperty.getName().equals(field.getName())) {
-                        matchedBuildProperty = buildProperty;
+    private void verifyAllTargetClassAttributesCanBeBuild() {
+        verifyAllTargetClassAttributesCanBeBuild(targetClass);
+    }
+
+    private void verifyAllTargetClassAttributesCanBeBuild(Class clazz) {
+        if (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers())) {
+                    BuildPropertyAccessor matchedBuildProperty = null;
+                    for (BuildPropertyAccessor buildProperty : buildProperties) {
+                        if (buildProperty.getName().equals(field.getName())) {
+                            matchedBuildProperty = buildProperty;
+                        }
                     }
+                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), add to ignore list if this is by design.",
+                            field.getName(), clazz.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
                 }
-                assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), add to ignore list if this is by design.",
-                        field.getName(), targetClass.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
             }
+            verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
         }
     }
 
