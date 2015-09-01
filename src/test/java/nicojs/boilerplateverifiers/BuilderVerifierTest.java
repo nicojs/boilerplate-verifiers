@@ -1,14 +1,6 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.examples.errors.BooleansWronglyAssigned;
-import nicojs.boilerplateverifiers.examples.errors.Couple;
-import nicojs.boilerplateverifiers.examples.errors.EmployeeCannotBuildParentAttributes;
-import nicojs.boilerplateverifiers.examples.errors.ErrorCollectionContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorMapContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorQueueContainer;
-import nicojs.boilerplateverifiers.examples.errors.ErrorSetContainer;
-import nicojs.boilerplateverifiers.examples.errors.NotAllAtributesCanBeBuild;
-import nicojs.boilerplateverifiers.examples.errors.Switches;
+import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import org.junit.Test;
 
@@ -155,6 +147,11 @@ public class BuilderVerifierTest {
     public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
         BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
         assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), add to ignore list if this is by design");
+    }
+
+    @Test
+    public void verify_builderAccessorDoesNotReturnBuilderInstance_fails(){
+        assertError(IncorrectBuilderPropertyAccessorReturnType.class, "Builder method for \"theAttribute\" does not return the instance of \"IncorrectBuilderPropertyAccessorReturnTypeBuilder\". Add 'return this' as a final statement of the method.");
     }
 
     private void assertError(Class clazz, String expectedSubstring) {

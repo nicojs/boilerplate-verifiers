@@ -123,9 +123,10 @@ public class BuildPropertyAccessor {
         return builderMethod.getName();
     }
 
-    public void populate(Object value) throws InvocationTargetException, IllegalAccessException {
-        builderMethod.invoke(builderInstance, value);
+    public Object populate(Object value) throws InvocationTargetException, IllegalAccessException {
+        Object builder = builderMethod.invoke(builderInstance, value);
         expectedValue = value;
+        return builder;
     }
 
     @Value

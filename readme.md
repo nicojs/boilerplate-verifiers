@@ -16,11 +16,11 @@ Work in progress:
 1. Implement BuilderVerifier
   1. ~~Support for POJOS~~
   2. ~~Support for inheritance~~
-  3. Verify that all attributes are being build.
+  3. ~~Verify that all attributes are being build.~~
   4. Verify that no attribute can be set after build.
   5. Support for more scenarios using settings
     1. Support for attribute blacklist
-    2. Support 
+    2. Support for builder method blacklist
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
 

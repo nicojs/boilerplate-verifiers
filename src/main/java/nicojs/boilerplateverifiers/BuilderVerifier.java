@@ -125,7 +125,10 @@ public class BuilderVerifier {
             Class<?> propertyClass = buildProperty.getPropertyClass();
             Object value = valueFactories.provideNextValue(propertyClass);
             try {
-                buildProperty.populate(value);
+                Object builderInstance = buildProperty.populate(value);
+                assertThat(String.format("Builder method for \"%s\" does not return the instance of \"%s\". Add 'return this' as a final statement of the method.",
+                                buildProperty.getName(), this.builder.getClass().getSimpleName()),
+                        builderInstance, is(builder));
             } catch (IllegalAccessException e) {
                 fail(String.format("Method \"%s\" on builder could not accessed.", buildProperty.getName()));
             } catch (InvocationTargetException e) {
