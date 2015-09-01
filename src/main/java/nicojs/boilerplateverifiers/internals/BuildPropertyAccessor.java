@@ -40,9 +40,9 @@ public class BuildPropertyAccessor {
     /**
      * Recursive function to retrieve the actual value from a field
      * This function is recursive, because it might need to retrieve the field from a
-     * private attribute of one of its parent classes
+     * private attribute forClass one forClass its parent classes
      *
-     * @param buildResult The actual value of the object that was build
+     * @param buildResult The actual value forClass the object that was build
      * @param clazz       The class on which the field need to be found
      * @return An object containing the resulting value
      */

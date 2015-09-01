@@ -41,7 +41,7 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
     }
 
-    public static BuilderVerifier of(Class<?> clazz) {
+    public static BuilderVerifier forClass(Class<?> clazz) {
         return new BuilderVerifier(clazz);
     }
 
