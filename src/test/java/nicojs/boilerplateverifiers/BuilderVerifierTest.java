@@ -3,6 +3,8 @@ package nicojs.boilerplateverifiers;
 import nicojs.boilerplateverifiers.examples.entities.AllAttributesBeingUsedExcept;
 import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
+import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMethod;
+import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -159,6 +161,25 @@ public class BuilderVerifierTest {
     public void verify_allAttributesBeingUsedExcept_passes(){
         BuilderVerifier.forClass(AllAttributesBeingUsedExcept.class)
                 .allAttributesShouldBeBuildExcept("var2", "var3")
+                .verify();
+    }
+
+    @Test
+    public void verify_builderClassWithInvalidMethod_fails(){
+        assertError(BuilderClassWithAdditionalMethod.class, "Method \"doSomething\" on builder class should accept exactly one parameter");
+    }
+
+    @Test
+    public void verify_allMethodsOnBuilderClassShouldBeUsedExcept_passes(){
+        BuilderVerifier.forClass(BuilderClassWithAdditionalMethod.class)
+                .allMethodsOnBuilderClassShouldBeUsedExcept("doSomething")
+                .verify();
+    }
+
+    @Test
+    public void verify_withoutUsingGettersForVerification_passes(){
+        BuilderVerifier.forClass(ClassWithWeirdGetter.class)
+                .withoutUsingGettersForVerification()
                 .verify();
     }
 

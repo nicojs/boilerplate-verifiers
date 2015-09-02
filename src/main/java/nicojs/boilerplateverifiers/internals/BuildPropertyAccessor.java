@@ -21,12 +21,16 @@ public class BuildPropertyAccessor {
 
     private final Object builderInstance;
     private final Method builderMethod;
+    private final AttributeAccessorMode mode;
 
     private Object expectedValue;
     private Class<?> propertyClass;
 
-    public void assertValue(Object buildResult) {
-        ResultValue result = retrieveValueFromGetter(buildResult);
+    public void verifyValue(Object buildResult) {
+        ResultValue result = new ResultValue(false);
+        if(mode != AttributeAccessorMode.DIRECT) {
+            result = retrieveValueFromGetter(buildResult);
+        }
         if (!result.succeeded) {
             result = retrieveValueFromField(buildResult, buildResult.getClass());
         }
