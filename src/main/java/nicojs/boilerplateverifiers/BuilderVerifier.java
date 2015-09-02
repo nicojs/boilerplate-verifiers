@@ -10,7 +10,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -25,7 +28,7 @@ import static org.junit.Assert.fail;
 public class BuilderVerifier {
 
     private static final String BUILD_METHOD_NAME = "build";
-    private static final List<String> METHOD_BLACK_LIST = Arrays.asList(BUILD_METHOD_NAME,
+    private static final List<String> DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST = Arrays.asList(BUILD_METHOD_NAME,
             "toString", "equals", "hashCode", "notify", "notifyAll", "getClass", "wait");
     private String builderMethodName = "builder";
     private Class<?> targetClass;
@@ -33,12 +36,15 @@ public class BuilderVerifier {
     private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
     private Object buildResult;
-    private List<String> attributeBlacklist;
+    private Set<String> attributeBlacklist;
+    private Set<String> builderClassMethodBlacklist;
 
     public BuilderVerifier(Class<?> targetClass) {
         this.targetClass = targetClass;
         valueFactories = new ValueFactories();
         buildProperties = new ArrayList<>();
+        builderClassMethodBlacklist = new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST);
+        attributeBlacklist = new HashSet<>();
         JavaValueFactoryArchitect.fill(valueFactories);
     }
 
@@ -47,7 +53,12 @@ public class BuilderVerifier {
     }
 
     public BuilderVerifier allAttributesShouldBeBuildExcept(String... attributeNames) {
-        attributeBlacklist = Arrays.asList(attributeNames);
+        Collections.addAll(attributeBlacklist, attributeNames);
+        return this;
+    }
+
+    public BuilderVerifier allMethodsOnBuilderClassUsedExcept(String... builderClassMethodNames) {
+        Collections.addAll(builderClassMethodBlacklist, builderClassMethodNames);
         return this;
     }
 
@@ -84,7 +95,7 @@ public class BuilderVerifier {
 
     private boolean isValidAttribute(Field field) {
         return !Modifier.isStatic(field.getModifiers())
-                && (attributeBlacklist == null || !attributeBlacklist.contains(field.getName()));
+                && !attributeBlacklist.contains(field.getName());
     }
 
     private void verifyBuildResult() {
@@ -150,8 +161,8 @@ public class BuilderVerifier {
 
     private boolean isNotBlacklisted(Method method) {
 
-        if (!METHOD_BLACK_LIST.contains(method.getName())) {
-            assertThat(String.format("Builder method \"%s\" should accept exactly one parameter.", method.getName()), method.getParameterTypes().length, is(1));
+        if (!builderClassMethodBlacklist.contains(method.getName())) {
+            assertThat(String.format("Method \"%s\" on builder class should accept exactly one parameter.", method.getName()), method.getParameterTypes().length, is(1));
             return true;
         } else {
             return false;
@@ -162,4 +173,5 @@ public class BuilderVerifier {
         this.builderMethodName = builderMethodName;
         return this;
     }
+
 }

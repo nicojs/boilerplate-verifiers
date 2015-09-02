@@ -17,11 +17,13 @@ Work in progress:
   1. ~~Support for POJOS~~
   2. ~~Support for inheritance in the classes to build~~
   3. ~~Verify that all attributes are being build.~~
-  4. Support for inheritance in the builder classes themselves
+  4. ~~Support for inheritance in the builder classes themselves~~
   5. Verify that no attribute can be set after build.
   6. Support for more scenarios using settings
     1. ~~Support for attribute blacklist~~
-    2. Support for builder method blacklist
+    2. ~~Support for builder class method blacklist~~
+    3. Force don't use getter's to retrieve properties
+    4. Support for custom value factories
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
 
