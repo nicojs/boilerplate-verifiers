@@ -171,7 +171,7 @@ public class BuilderVerifierTest {
     @Test
     public void verify_allBuilderMethodsUsedExcept_passes(){
         BuilderVerifier.forClass(BuilderClassWithAdditionalMethod.class)
-                .allMethodsOnBuilderClassUsedExcept("doSomething")
+                .allMethodsOnBuilderClassShouldBeUsedExcept("doSomething")
                 .verify();
     }
 

@@ -57,7 +57,7 @@ public class BuilderVerifier {
         return this;
     }
 
-    public BuilderVerifier allMethodsOnBuilderClassUsedExcept(String... builderClassMethodNames) {
+    public BuilderVerifier allMethodsOnBuilderClassShouldBeUsedExcept(String... builderClassMethodNames) {
         Collections.addAll(builderClassMethodBlacklist, builderClassMethodNames);
         return this;
     }
