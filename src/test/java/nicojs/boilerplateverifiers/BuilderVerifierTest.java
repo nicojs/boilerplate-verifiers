@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.examples.entities.AllAttributesBeingUsedExcep
 import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMethod;
+import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -169,9 +170,16 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void verify_allBuilderMethodsUsedExcept_passes(){
+    public void verify_allMethodsOnBuilderClassShouldBeUsedExcept_passes(){
         BuilderVerifier.forClass(BuilderClassWithAdditionalMethod.class)
                 .allMethodsOnBuilderClassShouldBeUsedExcept("doSomething")
+                .verify();
+    }
+
+    @Test
+    public void verify_withoutUsingGettersForVerification_passes(){
+        BuilderVerifier.forClass(ClassWithWeirdGetter.class)
+                .withoutUsingGettersForVerification()
                 .verify();
     }
 

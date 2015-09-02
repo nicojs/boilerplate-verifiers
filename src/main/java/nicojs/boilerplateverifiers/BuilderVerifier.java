@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers;
 
+import nicojs.boilerplateverifiers.internals.AttributeAccessorMode;
 import nicojs.boilerplateverifiers.internals.BuildPropertyAccessor;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
@@ -38,9 +39,11 @@ public class BuilderVerifier {
     private Object buildResult;
     private Set<String> attributeBlacklist;
     private Set<String> builderClassMethodBlacklist;
+    private AttributeAccessorMode verificationAccessorMode;
 
     public BuilderVerifier(Class<?> targetClass) {
         this.targetClass = targetClass;
+        verificationAccessorMode = AttributeAccessorMode.GETTER_IF_POSSIBLE;
         valueFactories = new ValueFactories();
         buildProperties = new ArrayList<>();
         builderClassMethodBlacklist = new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST);
@@ -100,17 +103,16 @@ public class BuilderVerifier {
 
     private void verifyBuildResult() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
-            buildProperty.assertValue(buildResult);
+            buildProperty.verifyValue(buildResult);
         }
     }
 
-    @SuppressWarnings("NullArgumentToVariableArgMethod")
     private void build() {
         try {
             Method build = builder.getClass().getDeclaredMethod(BUILD_METHOD_NAME);
             assertThat(String.format("Expected builder method \"%s\" on \"%s\" to accept no parameters.",
                     BUILD_METHOD_NAME, builder.getClass().getSimpleName()), build.getParameterTypes().length, is(0));
-            buildResult = build.invoke(builder, null);
+            buildResult = build.invoke(builder);
         } catch (NoSuchMethodException e) {
             fail(String.format("No method called \"%s\" found on \"%s\".", BUILD_METHOD_NAME, builder.getClass().getSimpleName()));
         } catch (InvocationTargetException e) {
@@ -137,7 +139,7 @@ public class BuilderVerifier {
     private void inspectBuilderClass() {
         for (Method method : builder.getClass().getMethods()) {
             if (isNotBlacklisted(method)) {
-                buildProperties.add(new BuildPropertyAccessor(builder, method));
+                buildProperties.add(new BuildPropertyAccessor(builder, method, verificationAccessorMode));
             }
         }
     }
@@ -160,7 +162,6 @@ public class BuilderVerifier {
     }
 
     private boolean isNotBlacklisted(Method method) {
-
         if (!builderClassMethodBlacklist.contains(method.getName())) {
             assertThat(String.format("Method \"%s\" on builder class should accept exactly one parameter.", method.getName()), method.getParameterTypes().length, is(1));
             return true;
@@ -174,4 +175,8 @@ public class BuilderVerifier {
         return this;
     }
 
+    public BuilderVerifier withoutUsingGettersForVerification() {
+        verificationAccessorMode = AttributeAccessorMode.DIRECT;
+        return this;
+    }
 }
