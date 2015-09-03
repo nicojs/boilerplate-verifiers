@@ -24,6 +24,8 @@ Work in progress:
     2. ~~Support for builder class method blacklist~~
     3. ~~Force don't use getter's to verify attribute values~~
     4. ~~Support for custom value factories~~
+    5. ~~Support for not buildable Super classes~~
+    6. Support for build method prefix
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
 

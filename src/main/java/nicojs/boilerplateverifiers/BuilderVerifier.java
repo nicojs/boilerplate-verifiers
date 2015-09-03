@@ -67,6 +67,11 @@ public class BuilderVerifier {
         return this;
     }
 
+    public BuilderVerifier withoutBuildingSuperClasses() {
+        configuration.setAlsoBuildSuperClasses(false);
+        return this;
+    }
+
     public void verify() {
         JavaValueFactoryArchitect.fill(valueFactories);
         instantiateBuilder();
@@ -91,11 +96,17 @@ public class BuilderVerifier {
                             matchedBuildProperty = buildProperty;
                         }
                     }
-                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.",
-                            field.getName(), clazz.getSimpleName()), matchedBuildProperty, is(not(nullValue())));
+                    String additionalErrorMessage = "";
+                    if(clazz != this.configuration.getTargetClass()){
+                        additionalErrorMessage = " or withoutBuildingSuperClasses()";
+                    }
+                    assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), use allAttributesShouldBeBuildExcept(\"%s\")%s to specify that this attribute should not be build.",
+                            field.getName(), clazz.getSimpleName(), field.getName(), additionalErrorMessage), matchedBuildProperty, is(not(nullValue())));
                 }
             }
-            verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
+            if(configuration.isAlsoBuildSuperClasses()) {
+                verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
+            }
         }
     }
 

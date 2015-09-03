@@ -5,6 +5,7 @@ import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMethod;
 import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
+import nicojs.boilerplateverifiers.examples.manual.SubClass;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -147,9 +148,14 @@ public class BuilderVerifierTest {
     }
 
     @Test
+    public void verify_classWhichIsNotBuildingAllAttributes_fails(){
+        assertError(NotBuildingAllAttributes.class, "Missing build method for field \"notBuildableString\" (declared in class \"NotBuildingAllAttributes\"), use allAttributesShouldBeBuildExcept(\"notBuildableString\") to specify that this attribute should not be build");
+    }
+
+    @Test
     public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
         BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
-        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), use allAttributesShouldBeBuildExcept to ignore this attribute if this is by design.");
+        assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), use allAttributesShouldBeBuildExcept(\"age\") or withoutBuildingSuperClasses() to specify that this attribute should not be build.");
     }
 
     @Test
@@ -186,12 +192,19 @@ public class BuilderVerifierTest {
     @Test
     public void verify_withClassWithWrongAssignmentButBrokenCustomValueFactory_passes(){
         final Person person = Person.builder().build();
-        BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class){
+        BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class) {
             @Override
             public Person next() {
                 return person;
             }
         }).verify();
+    }
+
+    @Test
+    public void verify_withoutBuildingSuperClass_passes(){
+        BuilderVerifier.forClass(SubClass.class)
+                .withoutBuildingSuperClasses()
+                .verify();
     }
 
     private void assertError(Class clazz, String expectedSubstring) {
