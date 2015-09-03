@@ -183,6 +183,17 @@ public class BuilderVerifierTest {
                 .verify();
     }
 
+    @Test
+    public void verify_withClassWithWrongAssignmentButBrokenCustomValueFactory_passes(){
+        final Person person = Person.builder().build();
+        BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class){
+            @Override
+            public Person next() {
+                return person;
+            }
+        }).verify();
+    }
+
     private void assertError(Class clazz, String expectedSubstring) {
         BuilderVerifier builderVerifier = BuilderVerifier.forClass(clazz);
         assertError(builderVerifier, expectedSubstring);

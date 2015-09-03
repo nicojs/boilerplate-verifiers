@@ -1,7 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.maps;
 
 import nicojs.boilerplateverifiers.internals.Producer;
-import nicojs.boilerplateverifiers.internals.ValueFactory;
+import nicojs.boilerplateverifiers.ValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
 
 import java.util.Map;

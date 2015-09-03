@@ -48,7 +48,6 @@ public class BuilderVerifier {
         buildProperties = new ArrayList<>();
         builderClassMethodBlacklist = new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST);
         attributeBlacklist = new HashSet<>();
-        JavaValueFactoryArchitect.fill(valueFactories);
     }
 
     public static BuilderVerifier forClass(Class<?> clazz) {
@@ -66,6 +65,7 @@ public class BuilderVerifier {
     }
 
     public void verify() {
+        JavaValueFactoryArchitect.fill(valueFactories);
         instantiateBuilder();
         inspectBuilderClass();
         verifyAllTargetClassAttributesCanBeBuild();
@@ -177,6 +177,11 @@ public class BuilderVerifier {
 
     public BuilderVerifier withoutUsingGettersForVerification() {
         verificationAccessorMode = AttributeAccessorMode.DIRECT;
+        return this;
+    }
+
+    public BuilderVerifier withValueFactories(ValueFactory<?>... valueFactories) {
+        this.valueFactories.putIfNotExists(valueFactories);
         return this;
     }
 }

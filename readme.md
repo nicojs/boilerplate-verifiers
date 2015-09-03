@@ -23,7 +23,7 @@ Work in progress:
     1. ~~Support for attribute blacklist~~
     2. ~~Support for builder class method blacklist~~
     3. ~~Force don't use getter's to verify attribute values~~
-    4. Support for custom value factories
+    4. ~~Support for custom value factories~~
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
 

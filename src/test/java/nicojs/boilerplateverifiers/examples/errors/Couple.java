@@ -12,7 +12,6 @@ public class Couple {
     private Person man;
     private Person woman;
 
-    @java.beans.ConstructorProperties({"man", "woman"})
     Couple(Person man, Person woman) {
         this.man = man;
         this.woman = woman;

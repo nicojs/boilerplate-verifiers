@@ -1,6 +1,6 @@
 package nicojs.boilerplateverifiers.internals.valuefactories;
 
-import nicojs.boilerplateverifiers.internals.ValueFactory;
+import nicojs.boilerplateverifiers.ValueFactory;
 
 import java.util.Random;
 

@@ -1,6 +1,6 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
-import nicojs.boilerplateverifiers.internals.ValueFactory;
+import nicojs.boilerplateverifiers.ValueFactory;
 
 /**
  * Represents a DoubleValueFactory
