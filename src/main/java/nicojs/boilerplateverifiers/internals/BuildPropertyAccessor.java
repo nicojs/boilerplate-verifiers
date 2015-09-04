@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -21,6 +22,7 @@ public class BuildPropertyAccessor {
 
     private final Object builderInstance;
     private final Method builderMethod;
+    private final String builderMethodPrefix;
     private final AttributeAccessorMode mode;
 
     private Object expectedValue;
@@ -35,9 +37,9 @@ public class BuildPropertyAccessor {
             result = retrieveValueFromField(buildResult, buildResult.getClass());
         }
         if (!result.succeeded) {
-            fail(String.format("Could not find the corresponding field (or getter) for builder method \"%s\".", builderMethod.getName()));
+            fail(String.format("Could not find the corresponding field (or getter) for builder method \"%s\".", getName()));
         }
-        assertThat(String.format("Value used to build was not equal to value after build for property \"%s\".", builderMethod.getName()),
+        assertThat(String.format("Value used to build was not equal to value after build for property \"%s\".", getAttributeName()),
                 result.getValue(), is(expectedValue));
     }
 
@@ -101,7 +103,7 @@ public class BuildPropertyAccessor {
 
     private Field tryGetField(Class<?> clazz) {
         try {
-            return clazz.getDeclaredField(builderMethod.getName());
+            return clazz.getDeclaredField(getAttributeName());
         } catch (NoSuchFieldException e) {
             return null;
         }
@@ -116,9 +118,9 @@ public class BuildPropertyAccessor {
     }
 
     private String getterName() {
-        String getter = "get" + Character.toUpperCase(builderMethod.getName().charAt(0));
-        if (builderMethod.getName().length() > 1) {
-            getter += builderMethod.getName().substring(1);
+        String getter = "get" + Character.toUpperCase(getAttributeName().charAt(0));
+        if (getAttributeName().length() > 1) {
+            getter += getAttributeName().substring(1);
         }
         return getter;
     }
@@ -127,10 +129,23 @@ public class BuildPropertyAccessor {
         return builderMethod.getName();
     }
 
+    public String getAttributeName(){
+        String name = builderMethod.getName();
+        if(name.startsWith(builderMethodPrefix)){
+            name = name.substring(builderMethodPrefix.length(), builderMethodPrefix.length()+1).toLowerCase() + name.substring(builderMethodPrefix.length()+1);
+        }
+        return name;
+    }
+
     public Object populate(Object value) throws InvocationTargetException, IllegalAccessException {
         Object builder = builderMethod.invoke(builderInstance, value);
         expectedValue = value;
         return builder;
+    }
+
+    public void verifyPrefix() {
+        assertThat(String.format("Expected method \"%s\" on builder class \"%s\" to begin with prefix \"%s\", but it did not. Please use \"allMethodsOnBuilderClassShouldBeUsedExcept(\"%s\") if this method should be ignored.\"",
+                getName(), builderMethod.getDeclaringClass().getSimpleName(), builderMethodPrefix, getName()), getName(), startsWith(builderMethodPrefix));
     }
 
     @Value

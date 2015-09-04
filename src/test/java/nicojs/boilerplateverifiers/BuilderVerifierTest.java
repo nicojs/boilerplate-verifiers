@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.examples.entities.AllAttributesBeingUsedExcep
 import nicojs.boilerplateverifiers.examples.errors.*;
 import nicojs.boilerplateverifiers.examples.lombok.*;
 import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMethod;
+import nicojs.boilerplateverifiers.examples.manual.ClassWithBuilderPrefix;
 import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
 import nicojs.boilerplateverifiers.examples.manual.SubClass;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void verify_classWithBooleansWronglyAssigned_failsSometimes(){
+    public void verify_classWithBooleansWronglyAssigned_failsSometimes() {
         int numberOfTimesCaught = 0;
         for (int i = 0; i < 100; i++) {
             try {
@@ -73,124 +74,124 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void verify_classWithCollectionsAndLombokGeneratedBuilder_passes(){
+    public void verify_classWithCollectionsAndLombokGeneratedBuilder_passes() {
         BuilderVerifier.forClass(CollectionContainer.class).verify();
     }
 
     @Test
-    public void verify_classWithCollectionsAndWrongAssignmentInBuilder_fails(){
+    public void verify_classWithCollectionsAndWrongAssignmentInBuilder_fails() {
         assertTwoAttributesMixedUp(ErrorCollectionContainer.class, "man", "women");
     }
 
     @Test
-    public void verify_classWithMapsAndLombokGeneratedBuilder_passes(){
+    public void verify_classWithMapsAndLombokGeneratedBuilder_passes() {
         BuilderVerifier.forClass(MapContainer.class).verify();
     }
 
     @Test
-    public void verify_classWithMapsAndWrongAssignmentInBuilder_fails(){
+    public void verify_classWithMapsAndWrongAssignmentInBuilder_fails() {
         assertTwoAttributesMixedUp(ErrorMapContainer.class, "map", "hashMap");
     }
 
     @Test
-    public void verify_classWithSetsAndLombokGeneratedBuilder_passes(){
+    public void verify_classWithSetsAndLombokGeneratedBuilder_passes() {
         BuilderVerifier.forClass(SetContainer.class).verify();
     }
 
     @Test
-    public void verify_classWithSetsAndWrongAssignment_fails(){
+    public void verify_classWithSetsAndWrongAssignment_fails() {
         assertTwoAttributesMixedUp(ErrorSetContainer.class, "set", "hashSet");
     }
 
     @Test
-    public void verify_classWithQueuesAndLombokGeneratedBuilder_passes(){
+    public void verify_classWithQueuesAndLombokGeneratedBuilder_passes() {
         BuilderVerifier.forClass(QueueContainer.class).verify();
     }
 
     @Test
-    public void verify_classWithQueuesWrongAssignment_fails(){
+    public void verify_classWithQueuesWrongAssignment_fails() {
         assertError(ErrorQueueContainer.class, "");
     }
 
     @Test
-    public void verify_withDifferentBuilderName_fails(){
+    public void verify_withDifferentBuilderName_fails() {
         assertError(Employee.class, "No method found called \"builder\", did you call it differently?");
     }
 
     @Test
-    public void verify_withInheritance_passes(){
+    public void verify_withInheritance_passes() {
         BuilderVerifier.forClass(Employee.class)
                 .usingBuilderMethod("buildEmployee")
                 .verify();
     }
 
     @Test
-    public void verify_allPrimitiveAttributesWithLombok_passes(){
+    public void verify_allPrimitiveAttributesWithLombok_passes() {
         BuilderVerifier.forClass(PrimitiveBag.class)
                 .verify();
     }
 
     @Test
-    public void verify_classWithFinalComplexAttributeAndLombokBuilder_passes(){
+    public void verify_classWithFinalComplexAttributeAndLombokBuilder_passes() {
         BuilderVerifier.forClass(FinalAttribute.class)
                 .verify();
     }
 
     @Test
-    public void verify_classWithComplexAttributeWhichHasAStaticFieldAndLombokBuilder_passes(){
+    public void verify_classWithComplexAttributeWhichHasAStaticFieldAndLombokBuilder_passes() {
         BuilderVerifier.forClass(ClassWithAttributeWichHasStaticField.class)
                 .verify();
     }
 
     @Test
-    public void verify_classWhichDoesNotBuildAllAttributes_fails(){
+    public void verify_classWhichDoesNotBuildAllAttributes_fails() {
         assertError(NotAllAtributesCanBeBuild.class, "Missing build method for field \"attribute3\"");
     }
 
     @Test
-    public void verify_classWhichIsNotBuildingAllAttributes_fails(){
+    public void verify_classWhichIsNotBuildingAllAttributes_fails() {
         assertError(NotBuildingAllAttributes.class, "Missing build method for field \"notBuildableString\" (declared in class \"NotBuildingAllAttributes\"), use allAttributesShouldBeBuildExcept(\"notBuildableString\") to specify that this attribute should not be build");
     }
 
     @Test
-    public void verify_classWhichDoNotLetYouBuildParentAttributes_fails(){
+    public void verify_classWhichDoNotLetYouBuildParentAttributes_fails() {
         BuilderVerifier builder = BuilderVerifier.forClass(EmployeeCannotBuildParentAttributes.class).usingBuilderMethod("builderEmployee");
         assertError(builder, "Missing build method for field \"age\" (declared in class \"Person\"), use allAttributesShouldBeBuildExcept(\"age\") or withoutBuildingSuperClasses() to specify that this attribute should not be build.");
     }
 
     @Test
-    public void verify_builderAccessorDoesNotReturnBuilderInstance_fails(){
+    public void verify_builderAccessorDoesNotReturnBuilderInstance_fails() {
         assertError(IncorrectBuilderPropertyAccessorReturnType.class, "Builder method for \"theAttribute\" does not return the instance of \"IncorrectBuilderPropertyAccessorReturnTypeBuilder\". Add 'return this' as a final statement of the method.");
     }
 
     @Test
-    public void verify_allAttributesBeingUsedExcept_passes(){
+    public void verify_allAttributesBeingUsedExcept_passes() {
         BuilderVerifier.forClass(AllAttributesBeingUsedExcept.class)
                 .allAttributesShouldBeBuildExcept("var2", "var3")
                 .verify();
     }
 
     @Test
-    public void verify_builderClassWithInvalidMethod_fails(){
+    public void verify_builderClassWithInvalidMethod_fails() {
         assertError(BuilderClassWithAdditionalMethod.class, "Method \"doSomething\" on builder class should accept exactly one parameter");
     }
 
     @Test
-    public void verify_allMethodsOnBuilderClassShouldBeUsedExcept_passes(){
+    public void verify_allMethodsOnBuilderClassShouldBeUsedExcept_passes() {
         BuilderVerifier.forClass(BuilderClassWithAdditionalMethod.class)
                 .allMethodsOnBuilderClassShouldBeUsedExcept("doSomething")
                 .verify();
     }
 
     @Test
-    public void verify_withoutUsingGettersForVerification_passes(){
+    public void verify_withoutUsingGettersForVerification_passes() {
         BuilderVerifier.forClass(ClassWithWeirdGetter.class)
                 .withoutUsingGettersForVerification()
                 .verify();
     }
 
     @Test
-    public void verify_withClassWithWrongAssignmentButBrokenCustomValueFactory_passes(){
+    public void verify_withClassWithWrongAssignmentButBrokenCustomValueFactory_passes() {
         final Person person = Person.builder().build();
         BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class) {
             @Override
@@ -201,9 +202,35 @@ public class BuilderVerifierTest {
     }
 
     @Test
-    public void verify_withoutBuildingSuperClass_passes(){
+    public void verify_withoutBuildingSuperClass_passes() {
         BuilderVerifier.forClass(SubClass.class)
                 .withoutBuildingSuperClasses()
+                .verify();
+    }
+
+    @Test
+    public void verify_classWithBuilderMethodNotStatic_fails() {
+        assertError(ClassWithBuilderMethodNotStatic.class, "Method \"builder\" of class \"ClassWithBuilderMethodNotStatic\" is not declared static.");
+    }
+
+    @Test
+    public void verify_classWithABuilderWithPrefix_passes() {
+        BuilderVerifier.forClass(ClassWithBuilderPrefix.class)
+                .withPrefixForAllMethodsOnBuilder("with")
+                .verify();
+    }
+
+    @Test
+    public void verify_classWithABuilderWithPrefixButWrongPrefixSupplied_fails() {
+        assertError(BuilderVerifier.forClass(ClassWithBuilderPrefix.class).withPrefixForAllMethodsOnBuilder("prefix"),
+                "Expected method \"withString\" on builder class \"ClassWithBuilderPrefixBuilder\" to begin with prefix \"prefix\", but it did not. Please use \"allMethodsOnBuilderClassShouldBeUsedExcept(\"withString\") if this method should be ignored.\"");
+    }
+
+    @Test
+    public void verify_classWithABuilderWithPrefixButMethodIsIgnored_passes() {
+        BuilderVerifier.forClass(ClassWithBuilderPrefix.class)
+                .allMethodsOnBuilderClassShouldBeUsedExcept("withString")
+                .allAttributesShouldBeBuildExcept("string")
                 .verify();
     }
 
@@ -214,9 +241,9 @@ public class BuilderVerifierTest {
 
     private void assertError(BuilderVerifier builderVerifier, String expectedSubstring) {
         boolean caught = false;
-        try{
+        try {
             builderVerifier.verify();
-        }catch(AssertionError error){
+        } catch (AssertionError error) {
             assertThat(error.getMessage(), containsString(expectedSubstring));
             caught = true;
         }
@@ -225,9 +252,9 @@ public class BuilderVerifierTest {
 
     private void assertTwoAttributesMixedUp(final Class<?> clazz, final String first, final String second) {
         boolean caught = false;
-        try{
+        try {
             BuilderVerifier.forClass(clazz).verify();
-        }catch(AssertionError error){
+        } catch (AssertionError error) {
             caught = true;
             assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
             boolean containsMap = error.getMessage().contains("\"" + first + "\"");

@@ -67,6 +67,11 @@ public class BuilderVerifier {
         return this;
     }
 
+    public BuilderVerifier withPrefixForAllMethodsOnBuilder(String prefix) {
+        configuration.setPrefixForAllMethodsOnBuilder(prefix);
+        return this;
+    }
+
     public BuilderVerifier withoutBuildingSuperClasses() {
         configuration.setAlsoBuildSuperClasses(false);
         return this;
@@ -76,10 +81,17 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
         instantiateBuilder();
         inspectBuilderClass();
+        verifyBuildProperties();
         verifyAllTargetClassAttributesCanBeBuild();
         populateBuilder();
         build();
         verifyBuildResult();
+    }
+
+    private void verifyBuildProperties() {
+        for (BuildPropertyAccessor buildProperty : buildProperties) {
+            buildProperty.verifyPrefix();
+        }
     }
 
     private void verifyAllTargetClassAttributesCanBeBuild() {
@@ -92,7 +104,7 @@ public class BuilderVerifier {
                 if (isValidAttribute(field)) {
                     BuildPropertyAccessor matchedBuildProperty = null;
                     for (BuildPropertyAccessor buildProperty : buildProperties) {
-                        if (buildProperty.getName().equals(field.getName())) {
+                        if (buildProperty.getAttributeName().equals(field.getName())) {
                             matchedBuildProperty = buildProperty;
                         }
                     }
@@ -139,8 +151,11 @@ public class BuilderVerifier {
     private void instantiateBuilder() {
         try {
             Method builderMethod = configuration.getTargetClass().getDeclaredMethod(configuration.getBuilderMethodName());
-            builder = builderMethod.invoke(null);
-
+            if(Modifier.isStatic(builderMethod.getModifiers())) {
+                builder = builderMethod.invoke(null);
+            }else{
+                fail(String.format("Method \"%s\" of class \"%s\" is not declared static.", configuration.getBuilderMethodName(), configuration.getTargetClass().getSimpleName()));
+            }
         } catch (NoSuchMethodException e) {
             fail(String.format("No method found called \"%s\", did you call it differently?", configuration.getBuilderMethodName()));
         } catch (InvocationTargetException e) {
@@ -153,7 +168,7 @@ public class BuilderVerifier {
     private void inspectBuilderClass() {
         for (Method method : builder.getClass().getMethods()) {
             if (isNotBlacklisted(method)) {
-                buildProperties.add(new BuildPropertyAccessor(builder, method, configuration.getVerificationAccessorMode()));
+                buildProperties.add(new BuildPropertyAccessor(builder, method, configuration.getPrefixForAllMethodsOnBuilder(), configuration.getVerificationAccessorMode()));
             }
         }
     }

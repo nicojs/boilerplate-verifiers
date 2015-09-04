@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.examples.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Represents a SuperClass
@@ -8,5 +9,6 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 public class SuperClass {
+    @Getter
     private String value;
 }

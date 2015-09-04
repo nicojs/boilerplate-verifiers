@@ -31,12 +31,17 @@ public class BuilderConfiguration {
     @Setter
     private AttributeAccessorMode verificationAccessorMode;
 
+    private String prefixForAllMethodsOnBuilder;
+
     @Setter
     private boolean alsoBuildSuperClasses;
 
     public static BuilderConfiguration of(Class<?> targetClass) {
         return new BuilderConfiguration(targetClass, DEFAULT_BUILDER_CREATOR_METHOD_NAME, new HashSet<String>(),
-                new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST), AttributeAccessorMode.GETTER_IF_POSSIBLE, true);
+                new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST), AttributeAccessorMode.GETTER_IF_POSSIBLE, "", true);
     }
 
+    public void setPrefixForAllMethodsOnBuilder(String prefixForAllMethodsOnBuilder) {
+        this.prefixForAllMethodsOnBuilder = prefixForAllMethodsOnBuilder;
+    }
 }
