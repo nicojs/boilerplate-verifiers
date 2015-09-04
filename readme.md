@@ -19,11 +19,14 @@ Work in progress:
   3. ~~Verify that all attributes are being build.~~
   4. ~~Support for inheritance in the builder classes themselves~~
   5. Verify that no attribute can be set after build.
-  6. Support for more scenarios using settings
+  6. Verify the builder constructor is not accessible from the outside.
+  7. Support for more scenarios using settings
     1. ~~Support for attribute blacklist~~
     2. ~~Support for builder class method blacklist~~
     3. ~~Force don't use getter's to verify attribute values~~
-    4. Support for custom value factories
+    4. ~~Support for custom value factories~~
+    5. ~~Support for not buildable Super classes~~
+    6. ~~Support for prefixed methods on builder class (i.e. "withAge()", "withName()", etc ~~
 2. Implement ToStringVerifier
 3. Implement GetterSetterVerifier
 

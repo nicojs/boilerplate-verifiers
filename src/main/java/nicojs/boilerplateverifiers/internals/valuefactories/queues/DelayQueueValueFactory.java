@@ -1,6 +1,6 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.queues;
 
-import nicojs.boilerplateverifiers.internals.ValueFactory;
+import nicojs.boilerplateverifiers.ValueFactory;
 
 import java.util.concurrent.DelayQueue;
 

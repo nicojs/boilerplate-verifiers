@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers.internals;
 
+import nicojs.boilerplateverifiers.ValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.ComplexObjectValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.EnumValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.InvocationContext;
@@ -62,7 +63,7 @@ public class ValueFactories {
         return get(clazz).next();
     }
 
-    void putIfNotExists(ValueFactory... valueFactories) {
+    public void putIfNotExists(ValueFactory... valueFactories) {
         for (ValueFactory valueFactory : valueFactories) {
             if (factoryMap.get(valueFactory.getTargetClass()) == null) {
                 factoryMap.put(valueFactory.getTargetClass(), valueFactory);

@@ -2,7 +2,7 @@ package nicojs.boilerplateverifiers.internals.valuefactories;
 
 import nicojs.boilerplateverifiers.internals.Instantiator;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
-import nicojs.boilerplateverifiers.internals.ValueFactory;
+import nicojs.boilerplateverifiers.ValueFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -13,7 +13,6 @@ public class BooleansWronglyAssigned {
     private boolean toBe;
     private boolean orNotToBe;
 
-    @java.beans.ConstructorProperties({"bool1", "bool2", "toBe", "orNotToBe"})
     BooleansWronglyAssigned(boolean bool1, boolean bool2, boolean toBe, boolean orNotToBe) {
         this.bool1 = bool1;
         this.bool2 = bool2;
