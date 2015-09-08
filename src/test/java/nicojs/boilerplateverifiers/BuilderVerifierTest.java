@@ -234,6 +234,11 @@ public class BuilderVerifierTest {
                 .verify();
     }
 
+    @Test
+    public void verify_builderConstructorPublic_fails(){
+        assertError(BuilderConstructorPublic.class, "The constructor for builder \"BuilderConstructorPublicBuilder\" should not be declared public.");
+    }
+
     private void assertError(Class clazz, String expectedSubstring) {
         BuilderVerifier builderVerifier = BuilderVerifier.forClass(clazz);
         assertError(builderVerifier, expectedSubstring);

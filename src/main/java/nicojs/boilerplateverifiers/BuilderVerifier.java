@@ -6,16 +6,14 @@ import nicojs.boilerplateverifiers.internals.BuilderConfiguration;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -81,11 +79,20 @@ public class BuilderVerifier {
         JavaValueFactoryArchitect.fill(valueFactories);
         instantiateBuilder();
         inspectBuilderClass();
+        verifyBuilderConstructor();
         verifyBuildProperties();
         verifyAllTargetClassAttributesCanBeBuild();
         populateBuilder();
         build();
         verifyBuildResult();
+    }
+
+    private void verifyBuilderConstructor() {
+        final Class<?> builderClass = builder.getClass();
+        final Constructor<?>[] constructors = builderClass.getConstructors();
+        assertThat(String.format("Expected the builder class \"%s\" to only have one constructor, found %d.", builderClass.getSimpleName(), constructors.length), constructors.length, lessThan(2));
+        assertThat(String.format("The constructor for builder \"%s\" should not be declared public.", builderClass.getSimpleName()),
+                constructors.length, is(0));
     }
 
     private void verifyBuildProperties() {
@@ -109,14 +116,14 @@ public class BuilderVerifier {
                         }
                     }
                     String additionalErrorMessage = "";
-                    if(clazz != this.configuration.getTargetClass()){
+                    if (clazz != this.configuration.getTargetClass()) {
                         additionalErrorMessage = " or withoutBuildingSuperClasses()";
                     }
                     assertThat(String.format("Missing build method for field \"%s\" (declared in class \"%s\"), use allAttributesShouldBeBuildExcept(\"%s\")%s to specify that this attribute should not be build.",
                             field.getName(), clazz.getSimpleName(), field.getName(), additionalErrorMessage), matchedBuildProperty, is(not(nullValue())));
                 }
             }
-            if(configuration.isAlsoBuildSuperClasses()) {
+            if (configuration.isAlsoBuildSuperClasses()) {
                 verifyAllTargetClassAttributesCanBeBuild(clazz.getSuperclass());
             }
         }
@@ -151,9 +158,9 @@ public class BuilderVerifier {
     private void instantiateBuilder() {
         try {
             Method builderMethod = configuration.getTargetClass().getDeclaredMethod(configuration.getBuilderMethodName());
-            if(Modifier.isStatic(builderMethod.getModifiers())) {
+            if (Modifier.isStatic(builderMethod.getModifiers())) {
                 builder = builderMethod.invoke(null);
-            }else{
+            } else {
                 fail(String.format("Method \"%s\" of class \"%s\" is not declared static.", configuration.getBuilderMethodName(), configuration.getTargetClass().getSimpleName()));
             }
         } catch (NoSuchMethodException e) {

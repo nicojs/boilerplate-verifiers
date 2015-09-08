@@ -18,6 +18,8 @@ public class ClassWithBuilderPrefix {
     public static class ClassWithBuilderPrefixBuilder{
         private String string;
 
+        ClassWithBuilderPrefixBuilder(){}
+
         public ClassWithBuilderPrefixBuilder withString(String string){
             this.string = string;
             return this;

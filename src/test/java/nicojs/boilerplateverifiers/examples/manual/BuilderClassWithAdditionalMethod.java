@@ -18,6 +18,8 @@ public class BuilderClassWithAdditionalMethod {
     public static class BuilderClassWithAdditionalMethodsBuilder {
         private String first;
 
+        BuilderClassWithAdditionalMethodsBuilder(){}
+
         public BuilderClassWithAdditionalMethod.BuilderClassWithAdditionalMethodsBuilder first(String first) {
             this.first = first;
             return this;
