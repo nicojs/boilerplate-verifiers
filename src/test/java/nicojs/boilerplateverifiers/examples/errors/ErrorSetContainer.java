@@ -14,14 +14,14 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * Created by nicojs on 8/17/2015.
  */
 public class ErrorSetContainer {
-    private Set set;
-    private HashSet hashSet;
-    private SortedSet sortedSet;
-    private NavigableSet navigableSet;
-    private CopyOnWriteArraySet copyOnWriteArraySet;
-    private TreeSet treeSet;
-    private EnumSet enumSet;
-    private BitSet bitSet;
+    private final Set set;
+    private final HashSet hashSet;
+    private final SortedSet sortedSet;
+    private final NavigableSet navigableSet;
+    private final CopyOnWriteArraySet copyOnWriteArraySet;
+    private final TreeSet treeSet;
+    private final EnumSet enumSet;
+    private final BitSet bitSet;
 
     @java.beans.ConstructorProperties({"set", "hashSet", "sortedSet", "navigableSet", "copyOnWriteArraySet", "treeSet", "enumSet", "bitSet"})
     ErrorSetContainer(Set set, HashSet hashSet, SortedSet sortedSet, NavigableSet navigableSet, CopyOnWriteArraySet copyOnWriteArraySet, TreeSet treeSet, EnumSet enumSet, BitSet bitSet) {
