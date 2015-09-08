@@ -7,7 +7,10 @@ import lombok.Value;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -30,11 +33,11 @@ public class BuildPropertyAccessor {
 
     public void verifyValue(Object buildResult) {
         ResultValue result = new ResultValue(false);
-        if(mode != AttributeAccessorMode.DIRECT) {
+        if (mode != AttributeAccessorMode.DIRECT) {
             result = retrieveValueFromGetter(buildResult);
         }
         if (!result.succeeded) {
-            result = retrieveValueFromField(buildResult, buildResult.getClass());
+            result = retrieveAttributeValue(buildResult);
         }
         if (!result.succeeded) {
             fail(String.format("Could not find the corresponding field (or getter) for builder method \"%s\".", getName()));
@@ -43,34 +46,56 @@ public class BuildPropertyAccessor {
                 result.getValue(), is(expectedValue));
     }
 
+    public void verifyAttributeAccessibility(Class<?> targetClass){
+        final Field field = getAttributeField(targetClass);
+        assertThat(field, is(not(nullValue())));
+        assertThat(String.format("Field \"%s\" of class \"%s\" is not declared final.", field.getName(), field.getDeclaringClass().getSimpleName()),
+                Modifier.isFinal(field.getModifiers()), is(true));
+    }
+
+    public void verifyPrefix() {
+        assertThat(String.format("Expected method \"%s\" on builder class \"%s\" to begin with prefix \"%s\", but it did not. Please use \"allMethodsOnBuilderClassShouldBeUsedExcept(\"%s\") if this method should be ignored.\"",
+                getName(), builderMethod.getDeclaringClass().getSimpleName(), builderMethodPrefix, getName()), getName(), startsWith(builderMethodPrefix));
+    }
+
     /**
-     * Recursive function to retrieve the actual value from a field
-     * This function is recursive, because it might need to retrieve the field from a
-     * private attribute forClass one forClass its parent classes
+     * Retrieves the actual value from from the build result for this property accessor
      *
      * @param buildResult The actual value forClass the object that was build
-     * @param clazz       The class on which the field need to be found
      * @return An object containing the resulting value
      */
-    private ResultValue retrieveValueFromField(Object buildResult, Class<?> clazz) {
+    private ResultValue retrieveAttributeValue(Object buildResult) {
         ResultValue result = new ResultValue(false);
-        if (clazz != null) {
-            Field field = tryGetField(clazz);
-            if (field != null) {
-                field.setAccessible(true);
-                Object value = null;
-                try {
-                    value = field.get(buildResult);
-                } catch (IllegalAccessException e) {
-                    fail(String.format("Field \"%s\" of class \"%s\" is not accessible (is it public?).", field.getName(), clazz.getSimpleName()));
-                }
-                result = new ResultValue(true, value);
+        final Field field = getAttributeField(buildResult.getClass());
+        if (field != null) {
+            field.setAccessible(true);
+            Object value = null;
+            try {
+                value = field.get(buildResult);
+            } catch (IllegalAccessException e) {
+                fail(String.format("Field \"%s\" of class \"%s\" is not accessible (is it public?).", field.getName(), field.getDeclaringClass().getSimpleName()));
             }
-            if (!result.succeeded) {
-                result = retrieveValueFromField(buildResult, clazz.getSuperclass());
-            }
+            result = new ResultValue(true, value);
         }
         return result;
+    }
+
+    /**
+     * Retrieves the attribute field for which this property accessor is an abstraction
+     * This function is recursive, because it might need to retrieve the field from a
+     * private attribute forClass one forClass its parent classes
+     * @param clazz the class of the resulting builded object or one of its super classes.
+     * @return A field, or null if not found
+     */
+    private Field getAttributeField(Class<?> clazz) {
+        Field field = null;
+        if (clazz != null) {
+            field = tryGetField(clazz);
+            if (field == null) {
+                return getAttributeField(clazz.getSuperclass());
+            }
+        }
+        return field;
     }
 
     private ResultValue retrieveValueFromGetter(Object buildResult) {
@@ -95,7 +120,7 @@ public class BuildPropertyAccessor {
     }
 
     public Class<?> getPropertyClass() {
-        if(propertyClass == null){
+        if (propertyClass == null) {
             propertyClass = builderMethod.getParameterTypes()[0];
         }
         return propertyClass;
@@ -129,10 +154,10 @@ public class BuildPropertyAccessor {
         return builderMethod.getName();
     }
 
-    public String getAttributeName(){
+    public String getAttributeName() {
         String name = builderMethod.getName();
-        if(name.startsWith(builderMethodPrefix)){
-            name = name.substring(builderMethodPrefix.length(), builderMethodPrefix.length()+1).toLowerCase() + name.substring(builderMethodPrefix.length()+1);
+        if (name.startsWith(builderMethodPrefix)) {
+            name = name.substring(builderMethodPrefix.length(), builderMethodPrefix.length() + 1).toLowerCase() + name.substring(builderMethodPrefix.length() + 1);
         }
         return name;
     }
@@ -143,16 +168,12 @@ public class BuildPropertyAccessor {
         return builder;
     }
 
-    public void verifyPrefix() {
-        assertThat(String.format("Expected method \"%s\" on builder class \"%s\" to begin with prefix \"%s\", but it did not. Please use \"allMethodsOnBuilderClassShouldBeUsedExcept(\"%s\") if this method should be ignored.\"",
-                getName(), builderMethod.getDeclaringClass().getSimpleName(), builderMethodPrefix, getName()), getName(), startsWith(builderMethodPrefix));
-    }
-
     @Value
     @AllArgsConstructor
     private static class ResultValue {
         private boolean succeeded;
         private Object value;
+
         private ResultValue(boolean succeeded) {
             this(succeeded, null);
         }

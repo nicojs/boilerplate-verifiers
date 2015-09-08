@@ -234,6 +234,16 @@ public class BuilderVerifierTest {
                 .verify();
     }
 
+    @Test
+    public void verify_builderConstructorPublic_fails(){
+        assertError(BuilderConstructorPublic.class, "The constructor for builder \"BuilderConstructorPublicBuilder\" should not be declared public.");
+    }
+
+    @Test
+    public void verify_nonFinalAttribute_fails() {
+        assertError(NonFinalAttribute.class, "Field \"notFinal\" of class \"NonFinalAttribute\" is not declared final.");
+    }
+
     private void assertError(Class clazz, String expectedSubstring) {
         BuilderVerifier builderVerifier = BuilderVerifier.forClass(clazz);
         assertError(builderVerifier, expectedSubstring);

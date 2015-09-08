@@ -11,6 +11,6 @@ import lombok.Getter;
 @Getter
 public class Book {
 
-    private Person author;
-    private String title;
+    private final Person author;
+    private final String title;
 }

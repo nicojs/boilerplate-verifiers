@@ -9,23 +9,23 @@ import lombok.Builder;
 @Builder
 public class PrimitiveBag {
 
-    boolean aBoolean;
-    byte aByte;
-    char aChar;
-    double aDouble;
-    float aFloat;
-    int anInt;
-    long aLong;
-    short aShort;
-    Boolean aBoolean2;
-    Byte aByte2;
-    Character aCharacter;
-    Double aDouble2;
-    Float aFloat2;
-    Integer anInteger;
-    Long aLong2;
-    Short aShort2;
-    Object anObject;
-    Class aClass;
-    String aString;
+    final boolean aBoolean;
+    final byte aByte;
+    final char aChar;
+    final double aDouble;
+    final float aFloat;
+    final int anInt;
+    final long aLong;
+    final short aShort;
+    final Boolean aBoolean2;
+    final Byte aByte2;
+    final Character aCharacter;
+    final Double aDouble2;
+    final Float aFloat2;
+    final Integer anInteger;
+    final Long aLong2;
+    final Short aShort2;
+    final Object anObject;
+    final Class aClass;
+    final String aString;
 }

@@ -9,18 +9,18 @@ import java.util.concurrent.ConcurrentNavigableMap;
  * Created by nicojs on 8/16/2015.
  */
 public class ErrorMapContainer {
-    private Map map;
-    private SortedMap sortedMap;
-    private NavigableMap navigableMap;
-    private ConcurrentNavigableMap concurrentNavigableMap;
-    private EnumMap enumMap;
-    private ConcurrentHashMap concurrentHashMap;
-    private HashMap hashMap;
-    private Hashtable hashtable;
-    private LinkedHashMap linkedHashMap;
-    private Properties properties;
-    private TreeMap treeMap;
-    private WeakHashMap weakHashMap;
+    private final Map map;
+    private final SortedMap sortedMap;
+    private final NavigableMap navigableMap;
+    private final ConcurrentNavigableMap concurrentNavigableMap;
+    private final EnumMap enumMap;
+    private final ConcurrentHashMap concurrentHashMap;
+    private final HashMap hashMap;
+    private final Hashtable hashtable;
+    private final LinkedHashMap linkedHashMap;
+    private final Properties properties;
+    private final TreeMap treeMap;
+    private final WeakHashMap weakHashMap;
 
     @java.beans.ConstructorProperties({"map", "sortedMap", "navigableMap", "concurrentNavigableMap", "enumMap", "concurrentHashMap", "hashMap", "hashtable", "linkedHashMap", "properties", "treeMap", "weakHashMap"})
     ErrorMapContainer(Map map, SortedMap sortedMap, NavigableMap navigableMap, ConcurrentNavigableMap concurrentNavigableMap, EnumMap enumMap, ConcurrentHashMap concurrentHashMap, HashMap hashMap, Hashtable hashtable, LinkedHashMap linkedHashMap, Properties properties, TreeMap treeMap, WeakHashMap weakHashMap) {

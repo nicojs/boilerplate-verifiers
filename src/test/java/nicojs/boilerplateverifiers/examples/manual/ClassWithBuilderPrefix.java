@@ -5,7 +5,7 @@ package nicojs.boilerplateverifiers.examples.manual;
  * Created by nicojs
  */
 public class ClassWithBuilderPrefix {
-    private String string;
+    private final String string;
 
     public ClassWithBuilderPrefix(String string) {
         this.string = string;
@@ -17,6 +17,8 @@ public class ClassWithBuilderPrefix {
 
     public static class ClassWithBuilderPrefixBuilder{
         private String string;
+
+        ClassWithBuilderPrefixBuilder(){}
 
         public ClassWithBuilderPrefixBuilder withString(String string){
             this.string = string;

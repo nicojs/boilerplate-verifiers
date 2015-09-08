@@ -8,15 +8,15 @@ import lombok.Getter;
  */
 @Getter
 public class BooleansWronglyAssigned {
-    private boolean bool1;
-    private boolean bool2;
-    private boolean toBe;
-    private boolean orNotToBe;
+    private final boolean bool1;
+    private final boolean bool2;
+    private final boolean toBe;
+    private final boolean orNotToBe;
 
     BooleansWronglyAssigned(boolean bool1, boolean bool2, boolean toBe, boolean orNotToBe) {
         this.bool1 = bool1;
         this.bool2 = bool2;
-        this.toBe = orNotToBe; // Error!! Wrong assignement
+        this.toBe = orNotToBe; // Error!! Wrong assignment
         this.orNotToBe = toBe;
     }
 

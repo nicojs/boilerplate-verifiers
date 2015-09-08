@@ -12,17 +12,17 @@ import java.util.concurrent.ConcurrentNavigableMap;
  */
 @Builder
 public class MapContainer {
-    private Map map;
-    private SortedMap sortedMap;
-    private NavigableMap navigableMap;
-    private ConcurrentNavigableMap concurrentNavigableMap;
-    private EnumMap enumMap;
-    private ConcurrentHashMap concurrentHashMap;
-    private HashMap hashMap;
-    private Hashtable hashtable;
-    private LinkedHashMap linkedHashMap;
-    private Properties properties;
-    private TreeMap treeMap;
-    private WeakHashMap weakHashMap;
+    private final Map map;
+    private final SortedMap sortedMap;
+    private final NavigableMap navigableMap;
+    private final ConcurrentNavigableMap concurrentNavigableMap;
+    private final EnumMap enumMap;
+    private final ConcurrentHashMap concurrentHashMap;
+    private final HashMap hashMap;
+    private final Hashtable hashtable;
+    private final LinkedHashMap linkedHashMap;
+    private final Properties properties;
+    private final TreeMap treeMap;
+    private final WeakHashMap weakHashMap;
 
 }

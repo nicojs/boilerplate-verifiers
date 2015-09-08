@@ -9,10 +9,10 @@ import nicojs.boilerplateverifiers.examples.entities.SwitchValue;
  */
 @Getter
 public class Switches {
-    private SwitchValue switch1;
-    private SwitchValue switch2;
-    private SwitchValue switch3;
-    private SwitchValue switch4;
+    private final SwitchValue switch1;
+    private final SwitchValue switch2;
+    private final SwitchValue switch3;
+    private final SwitchValue switch4;
 
     @java.beans.ConstructorProperties({"switch1", "switch2", "switch3", "switch4"})
     Switches(SwitchValue switch1, SwitchValue switch2, SwitchValue switch3, SwitchValue switch4) {
