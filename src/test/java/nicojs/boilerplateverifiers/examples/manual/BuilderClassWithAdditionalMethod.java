@@ -5,7 +5,7 @@ package nicojs.boilerplateverifiers.examples.manual;
  * Created by nicojs on 9/2/2015.
  */
 public class BuilderClassWithAdditionalMethod {
-    private String first;
+    private final String first;
 
     BuilderClassWithAdditionalMethod(String first) {
         this.first = first;

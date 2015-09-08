@@ -8,5 +8,5 @@ import lombok.Builder;
  */
 @Builder
 public class NoGetter {
-    private String name;
+    private final String name;
 }

@@ -16,11 +16,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 @Builder
 public class SetContainer {
-    private Set set;
-    private SortedSet sortedSet;
-    private NavigableSet navigableSet;
-    private CopyOnWriteArraySet copyOnWriteArraySet;
-    private TreeSet treeSet;
-    private EnumSet enumSet;
-    private BitSet bitSet;
+    private final Set set;
+    private final SortedSet sortedSet;
+    private final NavigableSet navigableSet;
+    private final CopyOnWriteArraySet copyOnWriteArraySet;
+    private final TreeSet treeSet;
+    private final EnumSet enumSet;
+    private final BitSet bitSet;
 }

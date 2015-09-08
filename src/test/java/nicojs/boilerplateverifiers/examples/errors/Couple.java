@@ -9,8 +9,8 @@ import nicojs.boilerplateverifiers.examples.lombok.Person;
  */
 @Getter
 public class Couple {
-    private Person man;
-    private Person woman;
+    private final Person man;
+    private final Person woman;
 
     Couple(Person man, Person woman) {
         this.man = man;

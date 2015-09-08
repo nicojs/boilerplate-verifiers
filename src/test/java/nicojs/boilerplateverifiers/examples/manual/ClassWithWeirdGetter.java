@@ -8,7 +8,7 @@ import lombok.Builder;
  */
 @Builder
 public class ClassWithWeirdGetter {
-    private String var1;
+    private final String var1;
 
     public String getVar1(){
         return "sdasd";

@@ -6,12 +6,14 @@ package nicojs.boilerplateverifiers.examples.entities;
  */
 public class AllAttributesBeingUsedExcept {
 
-    private String var1;
-    private int var2;
-    private boolean var3;
+    private final String var1;
+    private final int var2;
+    private final boolean var3;
 
     AllAttributesBeingUsedExcept(String var1) {
         this.var1 = var1;
+        var2 = 0;
+        var3 = false;
     }
 
     public static AllAttributesBeingUsedExceptBuilder builder() {

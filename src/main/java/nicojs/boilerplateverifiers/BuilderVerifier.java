@@ -137,6 +137,7 @@ public class BuilderVerifier {
     private void verifyBuildResult() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
             buildProperty.verifyValue(buildResult);
+            buildProperty.verifyAttributeAccessibility(configuration.getTargetClass());
         }
     }
 

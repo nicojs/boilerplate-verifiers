@@ -9,7 +9,7 @@ import lombok.Builder;
 @Builder
 public class ClassWithAttributeWichHasStaticField {
 
-    private ClassWithStaticField field;
+    private final ClassWithStaticField field;
 
     class ClassWithStaticField{
         final static int A_STATIC_FIELD = 1;

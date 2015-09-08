@@ -14,9 +14,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 @Builder
 public class CollectionContainer {
-    private List<String> names;
-    private LinkedList<Integer> numbers;
-    private CopyOnWriteArrayList<Person> persons;
-    private ArrayList<SwitchValue> switches;
+    private final List<String> names;
+    private final LinkedList<Integer> numbers;
+    private final CopyOnWriteArrayList<Person> persons;
+    private final ArrayList<SwitchValue> switches;
 }
 

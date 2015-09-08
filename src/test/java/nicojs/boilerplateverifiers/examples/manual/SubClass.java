@@ -9,7 +9,7 @@ import nicojs.boilerplateverifiers.examples.entities.SuperClass;
  */
 @Builder
 public class SubClass extends SuperClass {
-    private String value2;
+    private final String value2;
 
     public SubClass(String value2){
         super("value1");

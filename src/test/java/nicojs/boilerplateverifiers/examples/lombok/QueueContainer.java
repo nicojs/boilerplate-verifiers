@@ -18,13 +18,13 @@ import java.util.concurrent.SynchronousQueue;
  */
 @Builder
 public class QueueContainer {
-    private Queue queue;
-    private BlockingQueue blockingQueue;
-    private Deque deque;
-    private ArrayBlockingQueue arrayBlockingQueue;
-    private ConcurrentLinkedDeque concurrentLinkedDeque;
-    private DelayQueue delayQueue;
-    private LinkedBlockingQueue linkedBlockingQueue;
-    private PriorityBlockingQueue priorityQueue;
-    private SynchronousQueue synchronousQueue;
+    private final Queue queue;
+    private final BlockingQueue blockingQueue;
+    private final Deque deque;
+    private final ArrayBlockingQueue arrayBlockingQueue;
+    private final ConcurrentLinkedDeque concurrentLinkedDeque;
+    private final DelayQueue delayQueue;
+    private final LinkedBlockingQueue linkedBlockingQueue;
+    private final PriorityBlockingQueue priorityQueue;
+    private final SynchronousQueue synchronousQueue;
 }
