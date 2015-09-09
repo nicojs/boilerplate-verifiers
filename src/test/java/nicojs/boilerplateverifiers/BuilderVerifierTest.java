@@ -267,9 +267,9 @@ public class BuilderVerifierTest {
         } catch (AssertionError error) {
             caught = true;
             assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
-            boolean containsMap = error.getMessage().contains("\"" + first + "\"");
-            boolean containsHashMap = error.getMessage().contains("\"" + second + "\"");
-            assertThat(containsHashMap || containsMap, is(true));
+            boolean containsFirst = error.getMessage().contains("\"" + first + "\"");
+            boolean containsSecond = error.getMessage().contains("\"" + second + "\"");
+            assertThat(containsSecond || containsFirst, is(true));
         }
         assertThat(caught, is(true));
     }
