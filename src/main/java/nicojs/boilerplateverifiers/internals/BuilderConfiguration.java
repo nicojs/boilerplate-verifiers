@@ -36,12 +36,16 @@ public class BuilderConfiguration {
     @Setter
     private boolean alsoBuildSuperClasses;
 
+    @Setter
+    private boolean verifyAttributeAccessibility;
+
     public static BuilderConfiguration of(Class<?> targetClass) {
         return new BuilderConfiguration(targetClass, DEFAULT_BUILDER_CREATOR_METHOD_NAME, new HashSet<String>(),
-                new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST), AttributeAccessorMode.GETTER_IF_POSSIBLE, "", true);
+                new HashSet<>(DEFAULT_BUILDER_CLASS_METHOD_BLACKLIST), AttributeAccessorMode.GETTER_IF_POSSIBLE, "", true, true);
     }
 
     public void setPrefixForAllMethodsOnBuilder(String prefixForAllMethodsOnBuilder) {
         this.prefixForAllMethodsOnBuilder = prefixForAllMethodsOnBuilder;
     }
+
 }

@@ -241,7 +241,14 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_nonFinalAttribute_fails() {
-        assertError(NonFinalAttribute.class, "Field \"notFinal\" of class \"NonFinalAttribute\" is not declared final.");
+        assertError(NonFinalAttribute.class, "Field \"notFinal\" of class \"NonFinalAttribute\" is not declared final. Use \"withoutVerifyingAttributeAccessibility()\" to ignore this error.");
+    }
+
+    @Test
+    public void verify_withoutVerifyingAttributeAccessibility_passes(){
+        BuilderVerifier.forClass(NonFinalAttribute.class)
+                .withoutVerifyingAttributeAccessibility()
+                .verify();
     }
 
     private void assertError(Class clazz, String expectedSubstring) {

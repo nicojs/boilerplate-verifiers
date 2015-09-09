@@ -75,6 +75,11 @@ public class BuilderVerifier {
         return this;
     }
 
+    public BuilderVerifier withoutVerifyingAttributeAccessibility() {
+        configuration.setVerifyAttributeAccessibility(false);
+        return this;
+    }
+
     public void verify() {
         JavaValueFactoryArchitect.fill(valueFactories);
         instantiateBuilder();
@@ -137,7 +142,9 @@ public class BuilderVerifier {
     private void verifyBuildResult() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
             buildProperty.verifyValue(buildResult);
-            buildProperty.verifyAttributeAccessibility(configuration.getTargetClass());
+            if (configuration.isVerifyAttributeAccessibility()) {
+                buildProperty.verifyAttributeAccessibility(configuration.getTargetClass());
+            }
         }
     }
 
@@ -206,5 +213,4 @@ public class BuilderVerifier {
             return false;
         }
     }
-
 }

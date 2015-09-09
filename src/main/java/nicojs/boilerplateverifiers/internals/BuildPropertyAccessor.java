@@ -49,7 +49,7 @@ public class BuildPropertyAccessor {
     public void verifyAttributeAccessibility(Class<?> targetClass) {
         final Field field = getAttributeField(targetClass);
         if (field != null) {
-            assertThat(String.format("Field \"%s\" of class \"%s\" is not declared final.", field.getName(), field.getDeclaringClass().getSimpleName()),
+            assertThat(String.format("Field \"%s\" of class \"%s\" is not declared final. Use \"withoutVerifyingAttributeAccessibility()\" to ignore this error.", field.getName(), field.getDeclaringClass().getSimpleName()),
                     Modifier.isFinal(field.getModifiers()), is(true));
         }
     }
