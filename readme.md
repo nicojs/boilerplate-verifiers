@@ -29,6 +29,7 @@ Work in progress:
     6. ~~Support for prefixed methods on builder class (i.e. "withAge()", "withName()", etc)~~
     7. ~~Support for ignoring verification of attribute accessibility.~~
 2. Implement ToStringVerifier
+  1. Support for POJOS
 3. Implement GetterSetterVerifier
 
 Builder
@@ -38,8 +39,8 @@ Builder
     // Book.java
     public class Book {
     
-        private Person author;
-        private String title;
+        private final Person author;
+        private final String title;
     
         Book(Person author, String title) {
             this.author = author;
@@ -58,6 +59,22 @@ Builder
     // BookTest.java
      @Test
     public void verifyBuilder() {
-        BuilderVerifier.of(Book.class).verify();
+        BuilderVerifier.forClass(Book.class).verify();
+    }
+```
+
+Highly configurable:
+```java
+    public void verifyBuilderWithAllPossibleSettings() {
+        BuilderVerifier.forClass(Book.class)
+                    .allAttributesShouldBeBuildExcept("author")
+                    .allMethodsOnBuilderClassShouldBeUsedExcept("copyTo")
+                    .usingBuilderMethod("buildBook")
+                    .withoutBuildingSuperClasses()
+                    .withoutUsingGettersForVerification()
+                    .withoutVerifyingAttributeAccessibility()
+                    .withPrefixForAllMethodsOnBuilder("with")
+                    .withValueFactories(new MyCustomValueFactory())
+                    .verify();
     }
 ```
