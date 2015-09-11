@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers;
 
+import nicojs.boilerplateverifiers.examples.tostring.GraphWithToStringAndChildWithoutToString;
 import nicojs.boilerplateverifiers.examples.tostring.PojoWithToString;
 import nicojs.boilerplateverifiers.examples.tostring.PojoWithoutToString;
 import org.junit.Test;
@@ -22,6 +23,11 @@ public class ToStringVerifierTest {
     @Test
     public void verify_pojoWithToString_passes(){
         ToStringVerifier.forClass(PojoWithToString.class).verify();
+    }
+
+    @Test
+    public void verify_simpleGraphNodeDoesNotImplementToString_fails(){
+        assertError(GraphWithToStringAndChildWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\")");
     }
 
     private void assertError(Class targetClass, String expectedSubstring) {
