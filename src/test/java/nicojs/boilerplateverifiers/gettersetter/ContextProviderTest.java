@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class ContextProviderTest {
@@ -66,6 +68,24 @@ public class ContextProviderTest {
         Methods methodsToTest = sut.determineMethodsToTest();
         assertThat(methodsToTest.hasMethodWithName("getSomethingElse"), is(false));
         assertThat(methodsToTest.hasMethodWithName("setSomethingElse"), is(false));
+    }
+
+    @Test
+    public void givenValidClass_whenContextIsCreated_canGetNewEmtpyInstanceOfGivenClass() {
+        GetSetVerificationContext<ValidGetterSetterUsage> sut = VerificationContextBuilder.forClass(ValidGetterSetterUsage.class).build();
+        ValidGetterSetterUsage emptyInstance = sut.newEmptyInstance();
+
+        assertThat(emptyInstance.getSomething(), is(nullValue()));
+        assertThat(emptyInstance.getSomethingElse(), is(nullValue()));
+    }
+
+    @Test
+    public void givenValidClass_whenContextIsCreated_canGetNewInitializedInstanceOfGivenClass() {
+        GetSetVerificationContext<ValidGetterSetterUsage> sut = VerificationContextBuilder.forClass(ValidGetterSetterUsage.class).build();
+        ValidGetterSetterUsage configuredInstance = sut.newConfiguredInstance();
+
+        assertThat(configuredInstance.getSomething(), is(notNullValue()));
+        assertThat(configuredInstance.getSomethingElse(), is(notNullValue()));
     }
 
     class ValidGetterSetterUsage {

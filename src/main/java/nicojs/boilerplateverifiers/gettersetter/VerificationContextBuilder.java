@@ -1,5 +1,8 @@
 package nicojs.boilerplateverifiers.gettersetter;
 
+import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
+import nicojs.boilerplateverifiers.internals.ValueFactories;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -24,10 +27,14 @@ public class VerificationContextBuilder<T> {
     }
 
     public GetSetVerificationContext<T> build() {
+        ValueFactories valueFactories = new ValueFactories();
+        JavaValueFactoryArchitect.fill(valueFactories);
+
         return GetSetVerificationContext.<T>builder()
                 .classToTest(classToTest)
                 .fields(determineFieldsToTest())
                 .methods(determineMethodsToTest())
+                .valueFactories(valueFactories)
                 .build();
     }
 

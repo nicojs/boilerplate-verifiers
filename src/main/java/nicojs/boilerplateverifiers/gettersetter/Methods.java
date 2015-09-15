@@ -25,7 +25,7 @@ public class Methods extends HashMap<String, Method> {
         return setters;
     }
 
-    public boolean hasMethodWithName(String fieldName) {
-        return this.containsKey(fieldName);
+    public boolean hasMethodWithName(String methodName) {
+        return this.containsKey(methodName);
     }
 }

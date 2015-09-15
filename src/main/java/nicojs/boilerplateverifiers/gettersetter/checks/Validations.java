@@ -12,6 +12,7 @@ public enum Validations {
     GETTER_SHOULD_NOT_HAVE_A_PARAMETER(new GetterShouldNotHaveParameter()),
     SETTER_SHOULD_NOT_HAVE_EXACTLY_ONE_PARAMETER(new SetterShouldHaveExactlyOneParameter()),
     SETTER_PARAMETER_SHOULD_BE_OF_SAME_TYPE_AS_FIELD(new ParameterOfSetterTypeCheck()),
+    GETTER_RETURN_TYPE_SHOULD_BE_OF_SAME_TYPE_AS_FIELD(new ReturnTypeOfGetterTypeCheck()),
     SETTER_SHOULD_HAVE_VOID_RETURN_TYPE(new SetterShouldHaveVoidReturnType());
 
     private GetterSetterCheck getterSettercheck;
