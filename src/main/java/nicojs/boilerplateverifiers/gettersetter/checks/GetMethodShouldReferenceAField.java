@@ -8,7 +8,7 @@ public class GetMethodShouldReferenceAField extends PropertyMethodShouldReferenc
 
     @Override
     protected Methods getMethodsToTest(GetSetVerificationContext context) {
-        return context.getMethods().onlyGetters();
+        return context.getMethods().getterMethods();
     }
 
     @Override

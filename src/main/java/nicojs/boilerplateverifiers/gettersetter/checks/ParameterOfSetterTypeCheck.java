@@ -1,24 +1,27 @@
 package nicojs.boilerplateverifiers.gettersetter.checks;
 
-import nicojs.boilerplateverifiers.gettersetter.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Map;
+import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
+import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
+import nicojs.boilerplateverifiers.gettersetter.JavaBeansNameParser;
+import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.SetterDeclaration;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Setters;
 
 public class ParameterOfSetterTypeCheck extends GetterSetterCheck {
     private static final String ERROR_FORMAT = "Parameter of setter was not the same type as the referenced field: %s";
 
     @Override
     public VerificationResult execute(GetSetVerificationContext context) {
-        Methods setters = context.getMethods().onlySetters();
+        Setters setters = context.getMethods().setters();
         Fields fields = context.getFields();
 
-        for (Map.Entry<String, Method> entry : setters.entrySet()) {
-            String expectedFieldName = JavaBeansNameParser.propertyMethodToField(entry.getKey());
-            Field field = fields.get(expectedFieldName);
-            if (field.getType() != entry.getValue().getParameterTypes()[0]) {
-                addFailure(entry.getKey());
+        for (SetterDeclaration entry : setters) {
+            String expectedFieldName = JavaBeansNameParser.propertyMethodToField(entry.getName());
+            FieldDeclaration field = fields.getFieldByName(expectedFieldName);
+            if (field.getType() != entry.getParameterType()) {
+                addFailure(entry.getName());
             }
         }
 

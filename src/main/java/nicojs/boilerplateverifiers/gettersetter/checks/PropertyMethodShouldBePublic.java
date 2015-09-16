@@ -4,10 +4,9 @@ import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
 import nicojs.boilerplateverifiers.gettersetter.Methods;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.MethodDeclaration;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 
 public abstract class PropertyMethodShouldBePublic extends GetterSetterCheck {
     protected abstract Methods getMethodsToTest(GetSetVerificationContext context);
@@ -15,9 +14,9 @@ public abstract class PropertyMethodShouldBePublic extends GetterSetterCheck {
     @Override
     public final VerificationResult execute(GetSetVerificationContext context) {
         Methods propertyMethods = getMethodsToTest(context);
-        for (Map.Entry<String, Method> method : propertyMethods.entrySet()) {
-            if (!Modifier.isPublic(method.getValue().getModifiers())) {
-                addFailure(method.getKey());
+        for (MethodDeclaration entry : propertyMethods) {
+            if (!Modifier.isPublic(entry.getMethod().getModifiers())) {
+                addFailure(entry.getName());
             }
         }
 

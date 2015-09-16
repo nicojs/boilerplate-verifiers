@@ -1,17 +1,14 @@
 package nicojs.boilerplateverifiers.gettersetter;
 
+import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.Assert.fail;
 
 public class VerificationContextBuilder<T> {
     private static List<String> defaultExcludedFields = Arrays.asList("class", "this$0");
@@ -51,19 +48,10 @@ public class VerificationContextBuilder<T> {
         Field[] declaredFields = classToTest.getDeclaredFields();
         for (Field field : declaredFields) {
             if (!excludedProperties.fieldNames().contains(field.getName())) {
-                filteredFields.put(field.getName(), field);
+                filteredFields.put(field.getName(), new FieldDeclaration(field.getName(), field));
             }
         }
         return filteredFields;
-    }
-
-    private BeanInfo getBeanInfo() {
-        try {
-            return Introspector.getBeanInfo(classToTest);
-        } catch (IntrospectionException e) {
-            fail();
-            throw new IllegalStateException(e);
-        }
     }
 
     Methods determineMethodsToTest() {

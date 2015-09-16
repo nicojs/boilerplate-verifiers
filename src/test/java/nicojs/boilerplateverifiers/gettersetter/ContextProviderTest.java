@@ -1,14 +1,13 @@
 package nicojs.boilerplateverifiers.gettersetter;
 
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class ContextProviderTest {
@@ -21,7 +20,7 @@ public class ContextProviderTest {
         Fields fieldsToTest = sut.determineFieldsToTest();
 
         for (String field : defaultClassFields) {
-            assertThat(fieldsToTest.containsKey(field), is(false));
+            assertThat(fieldsToTest.hasFieldWithName(field), is(false));
         }
     }
 
@@ -33,7 +32,7 @@ public class ContextProviderTest {
         Fields fieldsToTest = sut.determineFieldsToTest();
 
         for (String field : defaultInnerClassFields) {
-            assertThat(fieldsToTest.containsKey(field), is(false));
+            assertThat(fieldsToTest.hasFieldWithName(field), is(false));
         }
     }
 
@@ -45,7 +44,7 @@ public class ContextProviderTest {
         Methods methodsToTest = sut.determineMethodsToTest();
 
         for (String method : defaultClassFields) {
-            assertThat(methodsToTest.containsKey(method), is(false));
+            assertThat(methodsToTest.hasMethodWithName(method), is(false));
         }
     }
 

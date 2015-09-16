@@ -1,6 +1,8 @@
 package nicojs.boilerplateverifiers.gettersetter.checks;
 
 import nicojs.boilerplateverifiers.gettersetter.*;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.MethodDeclaration;
 
 public abstract class PropertyMethodShouldReferenceAField extends GetterSetterCheck {
 
@@ -11,10 +13,10 @@ public abstract class PropertyMethodShouldReferenceAField extends GetterSetterCh
         Fields fields = context.getFields();
         Methods methodsToTest = getMethodsToTest(context);
 
-        for (String setterMethodName : methodsToTest.keySet()) {
-            String expectedFieldName = JavaBeansNameParser.propertyMethodToField(setterMethodName);
+        for (MethodDeclaration entry : methodsToTest) {
+            String expectedFieldName = JavaBeansNameParser.propertyMethodToField(entry.getName());
             if (!fields.hasFieldWithName(expectedFieldName)) {
-                addFailure(setterMethodName);
+                addFailure(entry.getName());
             }
         }
 

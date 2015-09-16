@@ -8,7 +8,7 @@ public class SetterShouldHaveExactlyOneParameter extends PropertyMethodParameter
 
     @Override
     protected Methods methodsToTest(GetSetVerificationContext context) {
-        return context.getMethods().onlySetters();
+        return context.getMethods().setterMethods();
     }
 
     @Override

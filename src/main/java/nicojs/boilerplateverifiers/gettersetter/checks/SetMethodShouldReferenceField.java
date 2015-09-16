@@ -13,6 +13,6 @@ public class SetMethodShouldReferenceField extends PropertyMethodShouldReference
 
     @Override
     protected Methods getMethodsToTest(GetSetVerificationContext context) {
-        return context.getMethods().onlySetters();
+        return context.getMethods().setterMethods();
     }
 }

@@ -2,12 +2,12 @@ package nicojs.boilerplateverifiers.gettersetter;
 
 import lombok.Builder;
 import lombok.Getter;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
 import nicojs.boilerplateverifiers.internals.Instantiator;
-import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import static org.junit.Assert.fail;
 
@@ -29,22 +29,15 @@ public class GetSetVerificationContext<T> {
     }
 
     private T fillFields(T instance) {
-        for (Map.Entry<String, Field> entry : fields.entrySet()) {
-            Field field = entry.getValue();
+        for (FieldDeclaration field : fields) {
             fillField(instance, field);
         }
         return instance;
     }
 
-    private void fillField(T instance, Field field) {
+    private void fillField(T instance, FieldDeclaration field) {
         Class<?> fieldType = field.getType();
-        field.setAccessible(true);
-        Object value = valueFactories.provideNextValue(fieldType);
-        try {
-            field.set(instance, value);
-        } catch (IllegalAccessException e) {
-            fail(e.getMessage());
-        }
-        field.setAccessible(false);
+        Object fieldValue = valueFactories.provideNextValue(fieldType);
+        field.set(instance, fieldValue);
     }
 }

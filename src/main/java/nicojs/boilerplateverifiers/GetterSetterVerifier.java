@@ -5,32 +5,30 @@ import nicojs.boilerplateverifiers.gettersetter.VerificationContextBuilder;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
 import nicojs.boilerplateverifiers.gettersetter.checks.Validations;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetterSetterVerifier<T> {
     private VerificationContextBuilder<T> verificationContextBuilder;
     private Class<T> classToTest;
-    private List<Validations> verificationToRun = Arrays.asList(Validations.values());
+    private List<Validations> verificationToRun;
 
     GetterSetterVerifier(Class<T> classToTest) {
         this.classToTest = classToTest;
+        this.verificationToRun = determineDefaultValidations();
         this.verificationContextBuilder = VerificationContextBuilder.forClass(classToTest);
     }
 
-
-    public GetterSetterVerifier<T> excludeField(String fieldName) {
-        verificationContextBuilder.excludeField(fieldName);
-        return this;
+    private List<Validations> determineDefaultValidations() {
+        List<Validations> verificationToRun = new ArrayList<>();
+        for (Validations validations : Validations.values()) {
+            verificationToRun.add(validations);
+        }
+        return verificationToRun;
     }
 
     public static <T> GetterSetterVerifier<T> forClass(Class<T> classToTest) {
         return new GetterSetterVerifier(classToTest);
-    }
-
-    public GetterSetterVerifier<T> excludeCheck(Validations validation) {
-        this.verificationToRun.remove(validation);
-        return this;
     }
 
     public void verify() {
@@ -45,5 +43,19 @@ public class GetterSetterVerifier<T> {
                 throw new AssertionError(String.format("Validation %s failed!: %s", validation, result.getMessage()));
             }
         }
+    }
+
+    //package scope while work in progress
+    GetterSetterVerifier<T> excludeField(String fieldName) {
+        verificationContextBuilder.excludeField(fieldName);
+        return this;
+    }
+
+    //package scope while work in progress
+    GetterSetterVerifier<T> excludeChecks(Validations... validation) {
+        for (Validations excluded : validation) {
+            this.verificationToRun.remove(excluded);
+        }
+        return this;
     }
 }

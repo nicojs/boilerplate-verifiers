@@ -4,9 +4,9 @@ import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
 import nicojs.boilerplateverifiers.gettersetter.Methods;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.MethodDeclaration;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 
 public abstract class PropertyMethodParameterCount extends GetterSetterCheck {
 
@@ -19,10 +19,10 @@ public abstract class PropertyMethodParameterCount extends GetterSetterCheck {
     public final VerificationResult execute(GetSetVerificationContext context) {
         Methods methods = methodsToTest(context);
 
-        for (Map.Entry<String, Method> entry : methods.entrySet()) {
-            Method method = entry.getValue();
+        for (MethodDeclaration entry : methods) {
+            Method method = entry.getMethod();
             if (method.getParameterCount() != parameterCount()) {
-                addFailure(entry.getKey());
+                addFailure(entry.getName());
             }
         }
         return returnResult();

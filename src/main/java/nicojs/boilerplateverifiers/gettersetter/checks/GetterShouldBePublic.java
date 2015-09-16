@@ -6,7 +6,7 @@ import nicojs.boilerplateverifiers.gettersetter.Methods;
 public class GetterShouldBePublic extends PropertyMethodShouldBePublic {
     @Override
     protected Methods getMethodsToTest(GetSetVerificationContext context) {
-        return context.getMethods().onlyGetters();
+        return context.getMethods().getterMethods();
     }
 
     @Override
