@@ -10,7 +10,7 @@ import nicojs.boilerplateverifiers.gettersetter.wrappers.Getters;
 import static nicojs.boilerplateverifiers.gettersetter.helpers.JavaBeansNameParser.propertyMethodToField;
 
 public class GetterShouldRetrieveValueFromField extends GetterSetterCheck {
-    private final String ERROR_FORMAT = "Getters were found that do not return the field value: %s.";
+    private static final String ERROR_FORMAT = "Getters were found that do not return the field value: %s.";
 
     @Override
     public VerificationResult execute(GetSetVerificationContext context) {
