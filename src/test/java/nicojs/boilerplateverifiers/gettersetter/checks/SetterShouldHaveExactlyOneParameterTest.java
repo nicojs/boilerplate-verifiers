@@ -3,6 +3,7 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.VerificationContextBuilder;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidSetter;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -15,7 +16,7 @@ public class SetterShouldHaveExactlyOneParameterTest {
 
     @Test
     public void givenClassWithValidSetter_whenValidationIsExecuted_returnsSuccess() {
-        GetSetVerificationContext context = VerificationContextBuilder.forClass(ValidSetUsage.class).build();
+        GetSetVerificationContext context = VerificationContextBuilder.forClass(OnlyValidSetter.class).build();
 
         VerificationResult verificationResult = sut.execute(context);
         assertThat(verificationResult.isSuccess(), is(true));
@@ -37,15 +38,6 @@ public class SetterShouldHaveExactlyOneParameterTest {
         VerificationResult verificationResult = sut.execute(context);
         assertThat(verificationResult.isSuccess(), is(false));
         assertThat(verificationResult.getMessage(), containsString("setSomething"));
-    }
-
-
-    class ValidSetUsage {
-        private String something;
-
-        public void setSomething(String something) {
-            this.something = something;
-        }
     }
 
     class SetterWithNoParameters {

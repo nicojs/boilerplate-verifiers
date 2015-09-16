@@ -3,6 +3,7 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.VerificationContextBuilder;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidGetter;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -14,7 +15,7 @@ public class GetterShouldBePublicTest {
 
     @Test
     public void givenClassWithPublicGetters_validationIsRun_validationSuccess() {
-        GetSetVerificationContext context = VerificationContextBuilder.forClass(PublicGetter.class).build();
+        GetSetVerificationContext context = VerificationContextBuilder.forClass(OnlyValidGetter.class).build();
 
         VerificationResult result = sut.execute(context);
 
@@ -39,12 +40,6 @@ public class GetterShouldBePublicTest {
 
         assertThat(result.isSuccess(), is(false));
         assertThat(result.getMessage(), containsString("getSomething"));
-    }
-
-    class PublicGetter {
-        public String getSomething() {
-            return "";
-        }
     }
 
     class PrivateGetter {

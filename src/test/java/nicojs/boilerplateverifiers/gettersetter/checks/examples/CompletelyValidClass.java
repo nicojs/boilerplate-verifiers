@@ -1,6 +1,6 @@
-package nicojs.boilerplateverifiers.gettersetter.checks.referenceclasses;
+package nicojs.boilerplateverifiers.gettersetter.checks.examples;
 
-public class ThePerfectClass {
+public class CompletelyValidClass {
     private String something;
     private String somethingElse;
 

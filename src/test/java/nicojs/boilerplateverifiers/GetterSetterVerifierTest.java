@@ -1,7 +1,9 @@
 package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.gettersetter.checks.Validations;
-import nicojs.boilerplateverifiers.gettersetter.checks.referenceclasses.ThePerfectClass;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.CompletelyValidClass;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.GetterThatDoesntReferenceField;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidGetter;
 import nicojs.boilerplateverifiers.gettersetter.exceptions.GetterSetterVerificationException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,21 +17,21 @@ public class GetterSetterVerifierTest {
     @Test(expected = AssertionError.class)
     public void shouldFailValidation() {
         GetterSetterVerifier
-                .forClass(RandomGetter.class)
+                .forClass(GetterThatDoesntReferenceField.class)
                 .verify();
     }
 
     @Test
     public void givenThePerfectClass_whenVerified_verificationShouldSucceed() {
         GetterSetterVerifier
-                .forClass(ThePerfectClass.class)
+                .forClass(CompletelyValidClass.class)
                 .verify();
     }
 
     @Test
     @Ignore("Work in progress")
     public void givenListsOfClassesAndSettings_whenVerified_noUnexpectedExceptionsShouldBeThrown() {
-        List<Class<?>> classList = Arrays.asList(ThePerfectClass.class, RandomGetter.class);
+        List<Class<?>> classList = Arrays.asList(CompletelyValidClass.class, GetterThatDoesntReferenceField.class);
         Set<Set<Validations>> validationsPowerSet = collectionValidationsPowerSet();
         //TODO add fields loop
 
@@ -50,14 +52,5 @@ public class GetterSetterVerifierTest {
     private Set<Set<Validations>> collectionValidationsPowerSet() {
         HashSet<Validations> validationsSet = new HashSet<>(Arrays.asList(Validations.values()));
         return TestHelper.powerSet(validationsSet);
-    }
-
-    class RandomGetter {
-        private String something;
-        private String somethingElse;
-
-        public String getCrap() {
-            return something;
-        }
     }
 }

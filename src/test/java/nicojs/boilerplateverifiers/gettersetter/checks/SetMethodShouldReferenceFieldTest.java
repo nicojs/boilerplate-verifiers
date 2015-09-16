@@ -3,6 +3,9 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.VerificationContextBuilder;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidGetter;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidSetter;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.SetterThatDoenstReferenceField;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -14,7 +17,7 @@ public class SetMethodShouldReferenceFieldTest {
 
     @Test
     public void ifClassHasSetMethodThatDoesntReferenceAFieldVerificationFails() {
-        GetSetVerificationContext context = VerificationContextBuilder.forClass(LetsUseSetForEveryMethod.class).build();
+        GetSetVerificationContext context = VerificationContextBuilder.forClass(SetterThatDoenstReferenceField.class).build();
 
         VerificationResult verificationResult = sut.execute(context);
         assertThat(verificationResult.isSuccess(), is(false));
@@ -23,7 +26,7 @@ public class SetMethodShouldReferenceFieldTest {
 
     @Test
     public void ifClassHasSetMethodThatReferencesAFieldVerificationSucceeds() {
-        GetSetVerificationContext context = VerificationContextBuilder.forClass(ValidSetUsage.class).build();
+        GetSetVerificationContext context = VerificationContextBuilder.forClass(OnlyValidSetter.class).build();
 
         VerificationResult verificationResult = sut.execute(context);
         assertThat(verificationResult.isSuccess(), is(true));
@@ -31,32 +34,9 @@ public class SetMethodShouldReferenceFieldTest {
 
     @Test
     public void ifClassHasNoSetMethodVerificationSucceeds() {
-        GetSetVerificationContext context = VerificationContextBuilder.forClass(ValidGetUsage.class).build();
+        GetSetVerificationContext context = VerificationContextBuilder.forClass(OnlyValidGetter.class).build();
 
         VerificationResult verificationResult = sut.execute(context);
         assertThat(verificationResult.isSuccess(), is(true));
-    }
-
-
-    class LetsUseSetForEveryMethod {
-        public void setSomething(String set) {
-
-        }
-    }
-
-    class ValidGetUsage {
-        private String something;
-
-        public String getSomething() {
-            return something;
-        }
-    }
-
-    class ValidSetUsage {
-        private String something;
-
-        public void setSomething(String something) {
-            this.something = something;
-        }
     }
 }
