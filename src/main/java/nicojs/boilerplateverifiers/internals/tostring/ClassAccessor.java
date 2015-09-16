@@ -24,12 +24,12 @@ public class ClassAccessor {
         }
     }
 
-    public void verifyAttributes(Object actualObject, String actualStringRepresentation) {
+    public void verifyAttributes(Object actualObject, String actualStringRepresentation, VerificationContext context) {
         for (AttributeAccessor attribute : attributes) {
-            attribute.verify(actualObject, actualStringRepresentation);
+            attribute.verify(actualObject, actualStringRepresentation, context);
         }
         if (superAccessor != null) {
-            superAccessor.verifyAttributes(actualObject, actualStringRepresentation);
+            superAccessor.verifyAttributes(actualObject, actualStringRepresentation, context);
         }
     }
 }

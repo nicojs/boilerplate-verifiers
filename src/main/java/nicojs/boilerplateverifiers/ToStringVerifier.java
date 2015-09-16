@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.tostring.ClassAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
+import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
 
 /**
  *
@@ -35,7 +36,7 @@ public class ToStringVerifier {
     }
 
     private void verifyAllAttributesStringified() {
-        classAccessor.verifyAttributes(instance, result);
+        classAccessor.verifyAttributes(instance, result, new VerificationContext());
     }
 
     private void inspectTargetClass() {

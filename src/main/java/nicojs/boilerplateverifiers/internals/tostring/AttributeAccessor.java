@@ -1,5 +1,7 @@
 package nicojs.boilerplateverifiers.internals.tostring;
 
+import lombok.EqualsAndHashCode;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -13,6 +15,7 @@ import static org.junit.Assert.fail;
  * Represents a AttributeAccessor
  * Created by nicojs
  */
+@EqualsAndHashCode
 public class AttributeAccessor {
     private final static List<Class> PRIMITIVE_TYPES = Arrays.<Class>asList(
             AtomicInteger.class,
@@ -56,13 +59,16 @@ public class AttributeAccessor {
         return !Modifier.isStatic(field.getModifiers());
     }
 
-    public void verify(Object actualObject, String actualStringRepresentation) {
-        if (isComplex()) {
-            new ClassAccessor(attribute.getType()).verifyAttributes(get(actualObject), actualStringRepresentation);
-        } else {
-            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualObject);
-            assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\").", attribute.getName(), attribute.getDeclaringClass().getSimpleName()),
-                    actualStringRepresentation, containsString(expectedStringRepresentation));
+    public void verify(Object actualObject, String actualStringRepresentation, VerificationContext context) {
+        if(!context.isVerified(actualObject)) {
+            context.addVerifiedObject(actualObject);
+            if (isComplex()) {
+                new ClassAccessor(attribute.getType()).verifyAttributes(get(actualObject), actualStringRepresentation, context);
+            } else {
+                final String expectedStringRepresentation = formatExpectedStringRepresentation(actualObject);
+                assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\").", attribute.getName(), attribute.getDeclaringClass().getSimpleName()),
+                        actualStringRepresentation, containsString(expectedStringRepresentation));
+            }
         }
     }
 
