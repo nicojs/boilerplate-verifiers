@@ -4,6 +4,7 @@ import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.VerificationContextBuilder;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
 import nicojs.boilerplateverifiers.gettersetter.checks.Validations;
+import nicojs.boilerplateverifiers.gettersetter.exceptions.GetterSetterVerificationException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class GetterSetterVerifier<T> {
         for (Validations validation : this.verificationToRun) {
             VerificationResult result = validation.getGetterSettercheck().execute(context);
             if (!result.isSuccess()) {
-                throw new AssertionError(String.format("Validation %s failed!: %s", validation, result.getMessage()));
+                throw new GetterSetterVerificationException(String.format("Validation %s failed!: %s", validation, result.getMessage()));
             }
         }
     }

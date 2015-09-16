@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.gettersetter.wrappers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import nicojs.boilerplateverifiers.gettersetter.exceptions.VerificationExecutionException;
 
 import java.lang.reflect.Field;
 
@@ -25,8 +26,7 @@ public class FieldDeclaration {
         try {
             fieldValue = field.get(instance);
         } catch (IllegalAccessException e) {
-            //TODO introduce own error message
-            fail(e.getMessage());
+            throw new VerificationExecutionException("Error while accessing field: " + field.getName(), e);
         } finally {
             field.setAccessible(accessible);
         }

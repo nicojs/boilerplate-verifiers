@@ -1,9 +1,9 @@
 package nicojs.boilerplateverifiers.gettersetter.wrappers;
 
+import nicojs.boilerplateverifiers.gettersetter.exceptions.VerificationExecutionException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static org.junit.Assert.fail;
 
 public class SetterDeclaration extends MethodDeclaration {
     public SetterDeclaration(String name, Method method) {
@@ -20,8 +20,7 @@ public class SetterDeclaration extends MethodDeclaration {
         try {
             getMethod().invoke(instance, setterValue);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            //TODO create error / exception
-            fail(e.getMessage());
+            throw new VerificationExecutionException("Error while invoking setter method: " + getName(), e);
         }
         getMethod().setAccessible(accessible);
     }
