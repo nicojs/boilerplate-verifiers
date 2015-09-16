@@ -13,7 +13,7 @@ public class GetterDeclaration extends MethodDeclaration {
     public Object invoke(Object instance) {
         Object returnedObject;
         boolean accessible = getMethod().isAccessible();
-        
+
         getMethod().setAccessible(true);
         try {
             returnedObject = getMethod().invoke(instance);

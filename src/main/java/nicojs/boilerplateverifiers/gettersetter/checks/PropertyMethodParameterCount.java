@@ -2,11 +2,9 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
-import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.MethodDeclaration;
-
-import java.lang.reflect.Method;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 
 public abstract class PropertyMethodParameterCount extends GetterSetterCheck {
 

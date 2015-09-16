@@ -2,8 +2,8 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
-import nicojs.boilerplateverifiers.gettersetter.helpers.JavaBeansNameParser;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
+import nicojs.boilerplateverifiers.gettersetter.helpers.JavaBeansNameParser;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.SetterDeclaration;

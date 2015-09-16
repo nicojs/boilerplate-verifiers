@@ -6,8 +6,6 @@ import nicojs.boilerplateverifiers.gettersetter.exceptions.VerificationExecution
 
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.fail;
-
 @AllArgsConstructor
 @Getter
 public class FieldDeclaration {

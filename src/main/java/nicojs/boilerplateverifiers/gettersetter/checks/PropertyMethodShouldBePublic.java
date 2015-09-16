@@ -2,9 +2,9 @@ package nicojs.boilerplateverifiers.gettersetter.checks;
 
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
 import nicojs.boilerplateverifiers.gettersetter.GetterSetterCheck;
-import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 import nicojs.boilerplateverifiers.gettersetter.VerificationResult;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.MethodDeclaration;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 
 import java.lang.reflect.Modifier;
 

@@ -8,8 +8,6 @@ import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 import nicojs.boilerplateverifiers.internals.Instantiator;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
-import static org.junit.Assert.fail;
-
 @Getter
 @Builder
 public class GetSetVerificationContext<T> {
