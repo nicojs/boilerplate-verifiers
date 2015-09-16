@@ -7,6 +7,8 @@ import nicojs.boilerplateverifiers.gettersetter.wrappers.SetterDeclaration;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.Setters;
 
 public class SetterShouldHaveVoidReturnType extends GetterSetterCheck {
+    private static final String ERROR_FORMAT = "Setter has a non-void return type: %s";
+
     @Override
     public VerificationResult execute(GetSetVerificationContext context) {
         Setters setters = context.getMethods().setters();
@@ -20,6 +22,6 @@ public class SetterShouldHaveVoidReturnType extends GetterSetterCheck {
 
     @Override
     protected String errorFormat() {
-        return "Setter has a non-void return type: %s";
+        return ERROR_FORMAT;
     }
 }
