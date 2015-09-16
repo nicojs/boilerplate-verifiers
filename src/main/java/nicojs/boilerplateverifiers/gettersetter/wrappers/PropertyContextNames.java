@@ -1,4 +1,4 @@
-package nicojs.boilerplateverifiers.gettersetter;
+package nicojs.boilerplateverifiers.gettersetter.wrappers;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package nicojs.boilerplateverifiers.gettersetter;
 
-import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
-import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.*;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 

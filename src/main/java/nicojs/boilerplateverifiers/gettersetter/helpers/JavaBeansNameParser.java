@@ -1,6 +1,10 @@
-package nicojs.boilerplateverifiers.gettersetter;
+package nicojs.boilerplateverifiers.gettersetter.helpers;
 
 public class JavaBeansNameParser {
+
+    private JavaBeansNameParser() {
+        //utility method, no public constructor
+    }
 
     //since method is the same for both a Get and Set
     public static String propertyMethodToField(String methodToField) {

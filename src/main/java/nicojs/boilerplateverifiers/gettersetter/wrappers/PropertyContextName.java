@@ -1,11 +1,9 @@
-package nicojs.boilerplateverifiers.gettersetter;
+package nicojs.boilerplateverifiers.gettersetter.wrappers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import nicojs.boilerplateverifiers.gettersetter.helpers.JavaBeansNameParser;
 
-/**
- * Created by tomco on 10-9-2015.
- */
 @AllArgsConstructor
 @Getter
 public class PropertyContextName {

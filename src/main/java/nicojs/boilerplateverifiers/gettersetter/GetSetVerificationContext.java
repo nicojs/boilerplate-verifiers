@@ -4,10 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.FieldDeclaration;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 import nicojs.boilerplateverifiers.internals.Instantiator;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
-
-import java.lang.reflect.Field;
 
 import static org.junit.Assert.fail;
 

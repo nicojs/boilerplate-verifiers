@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.gettersetter;
 
 import nicojs.boilerplateverifiers.gettersetter.wrappers.Fields;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;

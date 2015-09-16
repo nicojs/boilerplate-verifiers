@@ -1,6 +1,4 @@
-package nicojs.boilerplateverifiers.gettersetter;
-
-import nicojs.boilerplateverifiers.gettersetter.wrappers.*;
+package nicojs.boilerplateverifiers.gettersetter.wrappers;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

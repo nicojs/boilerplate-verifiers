@@ -1,7 +1,7 @@
 package nicojs.boilerplateverifiers.gettersetter.checks;
 
 import nicojs.boilerplateverifiers.gettersetter.GetSetVerificationContext;
-import nicojs.boilerplateverifiers.gettersetter.Methods;
+import nicojs.boilerplateverifiers.gettersetter.wrappers.Methods;
 
 public class SetMethodShouldReferenceField extends PropertyMethodShouldReferenceAField {
     private final String ERROR_FORMAT = "Setters were found that do not reference a field: %s";
