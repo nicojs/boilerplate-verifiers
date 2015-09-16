@@ -3,6 +3,7 @@ package nicojs.boilerplateverifiers;
 import nicojs.boilerplateverifiers.gettersetter.checks.Validations;
 import nicojs.boilerplateverifiers.gettersetter.checks.examples.CompletelyValidClass;
 import nicojs.boilerplateverifiers.gettersetter.checks.examples.GetterThatDoesntReferenceField;
+import nicojs.boilerplateverifiers.gettersetter.checks.examples.LombokedClass;
 import nicojs.boilerplateverifiers.gettersetter.checks.examples.OnlyValidGetter;
 import nicojs.boilerplateverifiers.gettersetter.exceptions.GetterSetterVerificationException;
 import org.junit.Ignore;
@@ -19,6 +20,20 @@ public class GetterSetterVerifierTest {
     public void givenCompletlyValidClass_whenVerified_verificationShouldSucceed() {
         GetterSetterVerifier
                 .forClass(CompletelyValidClass.class)
+                .verify();
+    }
+
+    @Test
+    public void givenValidInnerClass_whenVerified_verificationShouldSucceed() {
+        GetterSetterVerifier
+                .forClass(CompletelyValidClass.InnerClass.class)
+                .verify();
+    }
+
+    @Test
+    public void givenLombokedClass_whenVerified_verificationShouldSucceed() {
+        GetterSetterVerifier
+                .forClass(LombokedClass.class)
                 .verify();
     }
 
