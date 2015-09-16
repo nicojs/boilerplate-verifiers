@@ -14,6 +14,14 @@ import java.util.List;
 import java.util.Set;
 
 public class GetterSetterVerifierTest {
+
+    @Test
+    public void givenCompletlyValidClass_whenVerified_verificationShouldSucceed() {
+        GetterSetterVerifier
+                .forClass(CompletelyValidClass.class)
+                .verify();
+    }
+
     @Test(expected = AssertionError.class)
     public void shouldFailValidation() {
         GetterSetterVerifier
@@ -21,12 +29,6 @@ public class GetterSetterVerifierTest {
                 .verify();
     }
 
-    @Test
-    public void givenThePerfectClass_whenVerified_verificationShouldSucceed() {
-        GetterSetterVerifier
-                .forClass(CompletelyValidClass.class)
-                .verify();
-    }
 
     @Test
     @Ignore("Work in progress")

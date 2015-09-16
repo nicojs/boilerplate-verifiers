@@ -11,11 +11,9 @@ import java.util.List;
 
 public class GetterSetterVerifier<T> {
     private VerificationContextBuilder<T> verificationContextBuilder;
-    private Class<T> classToTest;
     private List<Validations> verificationToRun;
 
     GetterSetterVerifier(Class<T> classToTest) {
-        this.classToTest = classToTest;
         this.verificationToRun = determineDefaultValidations();
         this.verificationContextBuilder = VerificationContextBuilder.forClass(classToTest);
     }
