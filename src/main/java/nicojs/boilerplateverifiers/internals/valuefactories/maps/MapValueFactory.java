@@ -25,7 +25,7 @@ public class MapValueFactory<T extends Map> extends ValueFactory<T> {
         addMap(SortedMap.class, new TreeMap(), new TreeMap());
         addMap(NavigableMap.class, new TreeMap(), new TreeMap());
         addMap(ConcurrentNavigableMap.class, new ConcurrentSkipListMap(), new ConcurrentSkipListMap());
-        prefabValues.put(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
+        prefabValues.add(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
         addMap(ConcurrentHashMap.class, new ConcurrentHashMap(), new ConcurrentHashMap());
         addMap(HashMap.class, new HashMap(), new HashMap());
         addMap(Hashtable.class, new Hashtable(), new Hashtable());

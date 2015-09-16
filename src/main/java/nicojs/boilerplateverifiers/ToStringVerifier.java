@@ -5,6 +5,7 @@ import nicojs.boilerplateverifiers.internals.tostring.ClassAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
+import nicojs.boilerplateverifiers.internals.valuefactories.InvocationContext;
 
 /**
  *
@@ -20,7 +21,7 @@ public class ToStringVerifier {
 
     private ToStringVerifier(Class<?> targetClass){
         configuration = ToStringConfiguration.of(targetClass);
-        valueFactories = new ValueFactories();
+        valueFactories = new ValueFactories(new InvocationContext(10));
     }
 
     public static ToStringVerifier forClass(Class<?> targetClass){

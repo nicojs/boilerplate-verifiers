@@ -27,7 +27,7 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
     public T next() {
         Instantiator instantiator = Instantiator.of(getTargetClass());
         T newInstance = (T) instantiator.instantiate();
-        context.put(getTargetClass(), newInstance);
+        context.add(getTargetClass(), newInstance);
         scramble(newInstance);
         return newInstance;
     }

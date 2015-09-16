@@ -31,9 +31,13 @@ public class ValueFactories {
 
     private Map<Class, ValueFactory> factoryMap;
 
-    public ValueFactories() {
+    public ValueFactories(InvocationContext context){
+        this.context = context;
         factoryMap = new HashMap<>();
-        context = new InvocationContext();
+    }
+
+    public ValueFactories() {
+        this(new InvocationContext());
     }
 
     @SuppressWarnings("unchecked")
