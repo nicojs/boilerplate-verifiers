@@ -16,4 +16,8 @@ public class MethodDeclaration {
     public Class<?> getReturnType() {
         return method.getReturnType();
     }
+
+    public int getParameterCount() {
+        return method.getParameterTypes().length;
+    }
 }

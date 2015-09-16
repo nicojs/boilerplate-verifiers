@@ -19,10 +19,9 @@ public abstract class PropertyMethodParameterCount extends GetterSetterCheck {
     public final VerificationResult execute(GetSetVerificationContext context) {
         Methods methods = methodsToTest(context);
 
-        for (MethodDeclaration entry : methods) {
-            Method method = entry.getMethod();
+        for (MethodDeclaration method : methods) {
             if (method.getParameterCount() != parameterCount()) {
-                addFailure(entry.getName());
+                addFailure(method.getName());
             }
         }
         return returnResult();
