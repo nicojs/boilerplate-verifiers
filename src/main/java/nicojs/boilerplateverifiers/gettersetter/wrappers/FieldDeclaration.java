@@ -26,7 +26,7 @@ public class FieldDeclaration {
         try {
             fieldValue = field.get(instance);
         } catch (IllegalAccessException e) {
-            throw new VerificationExecutionException("Error while accessing field: " + field.getName(), e);
+            throw new VerificationExecutionException("Error while getting field: " + field.getName(), e);
         } finally {
             field.setAccessible(accessible);
         }
@@ -40,8 +40,9 @@ public class FieldDeclaration {
         try {
             field.set(instance, fieldValue);
         } catch (IllegalAccessException e) {
-            fail(e.getMessage());
+            throw new VerificationExecutionException("Error while setting field: " + field.getName(), e);
+        } finally {
+            field.setAccessible(accessible);
         }
-        field.setAccessible(accessible);
     }
 }

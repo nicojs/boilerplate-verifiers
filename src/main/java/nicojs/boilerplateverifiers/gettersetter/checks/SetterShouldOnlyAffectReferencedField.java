@@ -10,6 +10,8 @@ import nicojs.boilerplateverifiers.gettersetter.wrappers.SetterDeclaration;
 import nicojs.boilerplateverifiers.gettersetter.wrappers.Setters;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 
+import static nicojs.boilerplateverifiers.gettersetter.helpers.JavaBeansNameParser.propertyMethodToField;
+
 public class SetterShouldOnlyAffectReferencedField extends GetterSetterCheck {
     private static final String ERROR_FORMAT = "Setter was found that affects field different than referenced field: %s.";
 
@@ -21,7 +23,7 @@ public class SetterShouldOnlyAffectReferencedField extends GetterSetterCheck {
             Object instance = context.newEmptyInstance();
             setter.invoke(instance, parameterObject);
 
-            String fieldOfSetter = JavaBeansNameParser.propertyMethodToField(setter.getName());
+            String fieldOfSetter = propertyMethodToField(setter.getName());
             boolean wasOtherFieldChanged = wasOtherFieldChanged(context.getFields(), fieldOfSetter, instance);
 
             if (wasOtherFieldChanged) {
