@@ -14,6 +14,7 @@ public enum Validations {
     SETTER_PARAMETER_SHOULD_BE_OF_SAME_TYPE_AS_FIELD(new ParameterOfSetterTypeCheck()),
     GETTER_RETURN_TYPE_SHOULD_BE_OF_SAME_TYPE_AS_FIELD(new ReturnTypeOfGetterTypeCheck()),
     SETTER_SHOULD_HAVE_VOID_RETURN_TYPE(new SetterShouldHaveVoidReturnType()),
+    SETTER_SHOULD_AFFECT_REFERENCED_FIELD(new SetterShouldSetValueOnReferencedField()),
     SETTER_SHOULD_ONLY_AFFECT_REFERENCED_FIELD(new SetterShouldOnlyAffectReferencedField());
 
     private GetterSetterCheck getterSettercheck;
