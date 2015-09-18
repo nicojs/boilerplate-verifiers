@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.tostring;
 
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -12,11 +13,11 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 /**
- * Represents a AttributeAccessor
+ * Represents a GraphAttributeAccessor
  * Created by nicojs
  */
 @EqualsAndHashCode
-public class AttributeAccessor {
+public class GraphAttributeAccessor {
     private final static List<Class> PRIMITIVE_TYPES = Arrays.<Class>asList(
             AtomicInteger.class,
             Boolean.class,
@@ -39,17 +40,23 @@ public class AttributeAccessor {
             String.class
     );
     private final Field attribute;
+    private final String path;
 
-    public AttributeAccessor(Field attribute) {
+    public GraphAttributeAccessor(Field attribute, @NonNull String currentPath) {
         this.attribute = attribute;
+        if ("".equals(currentPath)) {
+            this.path = attribute.getName();
+        } else {
+            this.path = String.format("%s.%s", currentPath, attribute.getName());
+        }
         attribute.setAccessible(true);
     }
 
-    public static List<AttributeAccessor> inspectAttributes(Class targetClass) {
-        List<AttributeAccessor> attributes = new ArrayList<>();
+    public static List<GraphAttributeAccessor> forClassAttributes(Class targetClass, String currentPath) {
+        List<GraphAttributeAccessor> attributes = new ArrayList<>();
         for (Field field : targetClass.getDeclaredFields()) {
             if (isValid(field)) {
-                attributes.add(new AttributeAccessor(field));
+                attributes.add(new GraphAttributeAccessor(field, currentPath));
             }
         }
         return attributes;
@@ -60,15 +67,12 @@ public class AttributeAccessor {
     }
 
     public void verify(Object actualObject, String actualStringRepresentation, VerificationContext context) {
-        if(!context.isVerified(actualObject)) {
-            context.addVerifiedObject(actualObject);
-            if (isComplex()) {
-                new ClassAccessor(attribute.getType()).verifyAttributes(get(actualObject), actualStringRepresentation, context);
-            } else {
-                final String expectedStringRepresentation = formatExpectedStringRepresentation(actualObject);
-                assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\").", attribute.getName(), attribute.getDeclaringClass().getSimpleName()),
-                        actualStringRepresentation, containsString(expectedStringRepresentation));
-            }
+        if (isComplex()) {
+            new GraphAccessor(attribute.getType(), path).verifyAttributes(get(actualObject), actualStringRepresentation, context);
+        } else {
+            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualObject);
+            assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
+                    actualStringRepresentation, containsString(expectedStringRepresentation));
         }
     }
 

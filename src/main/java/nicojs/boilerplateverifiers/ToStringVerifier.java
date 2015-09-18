@@ -1,7 +1,7 @@
 package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
-import nicojs.boilerplateverifiers.internals.tostring.ClassAccessor;
+import nicojs.boilerplateverifiers.internals.tostring.GraphAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
 import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
@@ -17,7 +17,7 @@ public class ToStringVerifier {
     private final ValueFactories valueFactories;
     private Object instance;
     private String result;
-    private ClassAccessor classAccessor;
+    private GraphAccessor graphAccessor;
 
     private ToStringVerifier(Class<?> targetClass){
         configuration = ToStringConfiguration.of(targetClass);
@@ -37,11 +37,11 @@ public class ToStringVerifier {
     }
 
     private void verifyAllAttributesStringified() {
-        classAccessor.verifyAttributes(instance, result, new VerificationContext());
+        graphAccessor.verifyAttributes(instance, result, new VerificationContext());
     }
 
     private void inspectTargetClass() {
-        classAccessor = new ClassAccessor(configuration.getTargetClass());
+        graphAccessor = new GraphAccessor(configuration.getTargetClass());
     }
 
     private void stringify() {

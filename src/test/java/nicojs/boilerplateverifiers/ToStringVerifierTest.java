@@ -1,6 +1,9 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.examples.tostring.*;
+import nicojs.boilerplateverifiers.examples.tostring.GraphWithToStringAndChildWithoutToString;
+import nicojs.boilerplateverifiers.examples.tostring.NodeWithoutRecursiveToString;
+import nicojs.boilerplateverifiers.examples.tostring.PojoWithToString;
+import nicojs.boilerplateverifiers.examples.tostring.PojoWithoutToString;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -14,28 +17,24 @@ import static org.junit.Assert.assertThat;
 public class ToStringVerifierTest {
 
     @Test
-    public void verify_pojoWhichDoesNotImplementToString_fails(){
+    public void verify_pojoWhichDoesNotImplementToString_fails() {
         assertError(PojoWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\")");
     }
 
     @Test
-    public void verify_pojoWithToString_passes(){
+    public void verify_pojoWithToString_passes() {
         ToStringVerifier.forClass(PojoWithToString.class).verify();
     }
 
     @Test
-    public void verify_simpleGraphNodeDoesNotImplementToString_fails(){
+    public void verify_simpleGraphNodeDoesNotImplementToString_fails() {
         assertError(GraphWithToStringAndChildWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\")");
     }
 
     @Test
-    public void verify_graphWithSelfReference_passes(){
-        ToStringVerifier.forClass(GraphWithSelfReference.class).verify();
-    }
-
-    @Test
-    public void verify_nodeTree_passes(){
-        ToStringVerifier.forClass(Node.class).verify();
+    public void verify_nodeTreeWithoutRecursiveToString_fails() {
+        assertError(NodeWithoutRecursiveToString.class,
+                "Could not find string representation for field \"name\" (declared in class \"NodeWithoutRecursiveToString\"). Path to this field is \"parent.name\".");
     }
 
     private void assertError(Class targetClass, String expectedSubstring) {
