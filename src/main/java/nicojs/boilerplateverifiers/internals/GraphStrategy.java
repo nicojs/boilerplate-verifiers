@@ -4,7 +4,7 @@ package nicojs.boilerplateverifiers.internals;
  * Represents a setting to specify the behavior of a graph
  * Created by nicojs
  */
-public enum GraphBehavior {
+public enum GraphStrategy {
     /**
      * Represents the graph mode for a self referencing graph
      * For example Book --- Author relationship

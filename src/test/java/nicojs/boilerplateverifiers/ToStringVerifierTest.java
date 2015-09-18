@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.examples.tostring.*;
+import nicojs.boilerplateverifiers.internals.GraphStrategy;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -25,7 +26,7 @@ public class ToStringVerifierTest {
 
     @Test
     public void verify_simpleGraphNodeDoesNotImplementToString_fails() {
-        assertError(GraphWithToStringAndChildWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\")");
+        assertError(GraphWithToStringAndChildWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\"). Path to this field is \"pojoWithoutToString.aString\"");
     }
 
     @Test
@@ -37,6 +38,13 @@ public class ToStringVerifierTest {
     @Test
     public void verify_nodeTreeWithSmartRecursiveToString_passes(){
         ToStringVerifier.forClass(NodeWithSmartRecursiveToString.class).verify();
+    }
+
+    @Test
+    public void verify_nodeTreeWithRecursiveToStringAndGraphTree_passes(){
+        ToStringVerifier.forClass(NodeWithRecursiveToString.class)
+                .withGraphStrategy(GraphStrategy.NODE_TREE)
+                .verify();
     }
 
     private void assertError(Class targetClass, String expectedSubstring) {
