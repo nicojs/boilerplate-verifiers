@@ -1,9 +1,6 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.examples.tostring.GraphWithToStringAndChildWithoutToString;
-import nicojs.boilerplateverifiers.examples.tostring.NodeWithoutRecursiveToString;
-import nicojs.boilerplateverifiers.examples.tostring.PojoWithToString;
-import nicojs.boilerplateverifiers.examples.tostring.PojoWithoutToString;
+import nicojs.boilerplateverifiers.examples.tostring.*;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -35,6 +32,11 @@ public class ToStringVerifierTest {
     public void verify_nodeTreeWithoutRecursiveToString_fails() {
         assertError(NodeWithoutRecursiveToString.class,
                 "Could not find string representation for field \"name\" (declared in class \"NodeWithoutRecursiveToString\"). Path to this field is \"parent.name\".");
+    }
+
+    @Test
+    public void verify_nodeTreeWithSmartRecursiveToString_passes(){
+        ToStringVerifier.forClass(NodeWithSmartRecursiveToString.class).verify();
     }
 
     private void assertError(Class targetClass, String expectedSubstring) {

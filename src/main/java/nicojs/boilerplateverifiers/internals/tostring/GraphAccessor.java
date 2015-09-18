@@ -28,13 +28,13 @@ public class GraphAccessor {
 
     public void verifyAttributes(Object actualObject, String actualStringRepresentation, VerificationContext context) {
         if (!context.isVerified(actualObject)) {
+            context.addVerifiedObject(actualObject);
             for (GraphAttributeAccessor attribute : GraphAttributeAccessor.forClassAttributes(targetClass, path)) {
                 attribute.verify(actualObject, actualStringRepresentation, context);
             }
             if (superAccessor != null) {
                 superAccessor.verifyAttributes(actualObject, actualStringRepresentation, context);
             }
-            context.addVerifiedObject(actualObject);
         }
     }
 }

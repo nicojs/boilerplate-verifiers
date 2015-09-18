@@ -1,5 +1,6 @@
 package nicojs.boilerplateverifiers;
 
+import nicojs.boilerplateverifiers.internals.GraphBehavior;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.tostring.GraphAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
@@ -26,6 +27,11 @@ public class ToStringVerifier {
 
     public static ToStringVerifier forClass(Class<?> targetClass){
         return new ToStringVerifier(targetClass);
+    }
+
+    public ToStringVerifier withGraphBehavior(GraphBehavior graphBehavior){
+        configuration.setGraphBehavior(graphBehavior);
+        return this;
     }
 
     public void verify(){
