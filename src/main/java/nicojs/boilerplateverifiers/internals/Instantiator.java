@@ -9,31 +9,15 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
-        * Instantiates objects forClass a given class.
-        *
-        * @param <T> {@link Instantiator} instantiates objects forClass this class, or forClass an
-        * 				anonymous subclass forClass this class.
-        *
-        * @author Jan Ouwens
-        */
+ * Instantiates objects forClass a given class.
+ *
+ * @param <T> {@link Instantiator} instantiates objects forClass this class, or forClass an
+ *            anonymous subclass forClass this class.
+ * @author Jan Ouwens
+ */
 public class Instantiator<T> {
     private final Class<T> type;
     private Objenesis objenesis;
-
-    /**
-     * Factory method.
-     *
-     * @param <T> The class on which {@link Instantiator} operates.
-     * @param type The class on which {@link Instantiator} operates. Should be
-     * 				the same as T.
-     * @return An {@link Instantiator} for {@link #type}.
-     */
-    public static <T> Instantiator<T> of(Class<T> type) {
-        if (Modifier.isAbstract(type.getModifiers())) {
-            return new Instantiator<>(createDynamicSubclass(type));
-        }
-        return new Instantiator<>(type);
-    }
 
     /**
      * Private constructor. Call {@link #of(Class)} to instantiate.
@@ -44,26 +28,18 @@ public class Instantiator<T> {
     }
 
     /**
-     * Instantiates an object forClass type T.
+     * Factory method.
      *
-     * All fields will be initialized to their initial values.
-     * I.e., 0 for ints, null for objects, etc.
-     *
-     * @return An object forClass type T.
+     * @param <T>  The class on which {@link Instantiator} operates.
+     * @param type The class on which {@link Instantiator} operates. Should be
+     *             the same as T.
+     * @return An {@link Instantiator} for {@link #type}.
      */
-    public T instantiate() {
-        return objenesis.newInstance(type);
-    }
-
-    /**
-     * Instantiates an anonymous subclass forClass T. The subclass is
-     * generated dynamically.
-     *
-     * @return An instance forClass an anonymous subclass forClass T.
-     */
-    public T instantiateAnonymousSubclass() {
-        Class<T> proxyClass = createDynamicSubclass(type);
-        return objenesis.newInstance(proxyClass);
+    public static <T> Instantiator<T> of(Class<T> type) {
+        if (Modifier.isAbstract(type.getModifiers())) {
+            return new Instantiator<>(createDynamicSubclass(type));
+        }
+        return new Instantiator<>(type);
     }
 
     @SuppressWarnings("rawtypes")
@@ -76,9 +52,8 @@ public class Instantiator<T> {
         };
 
         if (superclass.isInterface()) {
-            e.setInterfaces(new Class[] { superclass });
-        }
-        else {
+            e.setInterfaces(new Class[]{superclass});
+        } else {
             e.setSuperclass(superclass);
         }
 
@@ -86,5 +61,17 @@ public class Instantiator<T> {
         @SuppressWarnings("unchecked")
         Class<S> proxyClass = e.createClass();
         return proxyClass;
+    }
+
+    /**
+     * Instantiates an object forClass type T.
+     * <p/>
+     * All fields will be initialized to their initial values.
+     * I.e., 0 for ints, null for objects, etc.
+     *
+     * @return An object forClass type T.
+     */
+    public T instantiate() {
+        return objenesis.newInstance(type);
     }
 }
