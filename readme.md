@@ -31,8 +31,8 @@ Work in progress:
 2. Implement ToStringVerifier
   1. ~~Support for POJOS~~
   2. ~~Support for graphs (deep toString)~~
-  3. Support for loops in graphs
-  4. Support for inheritance  (also uses toString of super class)
+  3. ~~Support for loops in graphs~~
+  4. Support for inheritance (also uses toString of super class)
   5. Support for more scenarios using settings
     1. Configure the key-value template
     2. Configure graph blacklist.

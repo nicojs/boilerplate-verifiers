@@ -5,6 +5,7 @@ package nicojs.boilerplateverifiers.internals.tostring;
  * Created by nicojs
  */
 public class GraphAccessor {
+    public static final String SUPER_PATH_VALUE = "%super";
     private final Class targetClass;
     private final String path;
     private GraphAccessor superAccessor;
@@ -22,18 +23,20 @@ public class GraphAccessor {
 
     private void inspectSuperClass() {
         if (targetClass.getSuperclass() != null) {
-            superAccessor = new GraphAccessor(targetClass.getSuperclass());
+            superAccessor = new GraphAccessor(targetClass.getSuperclass(), String.format("%s%s", path, SUPER_PATH_VALUE));
         }
     }
 
     public void verifyAttributes(Object actualObject, String actualStringRepresentation, VerificationContext context) {
         if (!context.isVerified(actualObject)) {
+            if (superAccessor != null) {
+                superAccessor.verifyAttributes(actualObject, actualStringRepresentation, context);
+            }
+
+            // Before we walk the graph, add this object to list of verified object in the context, preventing infinite loops
             context.addVerifiedObject(actualObject);
             for (GraphAttributeAccessor attribute : GraphAttributeAccessor.forClassAttributes(targetClass, path)) {
                 attribute.verify(actualObject, actualStringRepresentation, context);
-            }
-            if (superAccessor != null) {
-                superAccessor.verifyAttributes(actualObject, actualStringRepresentation, context);
             }
         }
     }

@@ -53,6 +53,17 @@ public class ToStringVerifierTest {
                 .verify();
     }
 
+    @Test
+    public void verify_inheritanceWithToString_passes(){
+        ToStringVerifier.forClass(InheritanceWithToString.class)
+                .verify();
+    }
+
+    @Test
+    public void verify_inheritanceWithoutParentWithoutToString_fails(){
+        assertError(InheritanceParentWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\"). Path to this field is \"%super.aString\"");
+    }
+
     private void assertError(Class targetClass, String expectedSubstring) {
         boolean caught = false;
         try {
