@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a LongValueFactory
@@ -15,7 +16,7 @@ public class LongValueFactory extends ValueFactory<Long> {
     }
 
     @Override
-    public Long next() {
+    public Long next(GraphCreationContext graphCreationContext) {
         return seed++;
     }
 }

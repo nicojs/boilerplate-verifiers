@@ -67,10 +67,11 @@ public class GraphAttributeAccessor {
     }
 
     public void verify(Object actualObject, String actualStringRepresentation, VerificationContext context) {
-        if (isComplex()) {
-            new GraphAccessor(attribute.getType(), path).verifyAttributes(get(actualObject), actualStringRepresentation, context);
+        final Object actualValue = get(actualObject);
+        if (isComplex() && actualValue != null) {
+            new GraphAccessor(attribute.getType(), path).verifyAttributes(actualValue, actualStringRepresentation, context);
         } else {
-            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualObject);
+            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
             assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
                     actualStringRepresentation, containsString(expectedStringRepresentation));
         }
@@ -92,8 +93,8 @@ public class GraphAttributeAccessor {
         return PRIMITIVE_TYPES.contains(attribute.getType());
     }
 
-    private String formatExpectedStringRepresentation(Object actualObject) {
-        return String.format("%s=%s", attribute.getName(), get(actualObject));
+    private String formatExpectedStringRepresentation(Object value) {
+        return String.format("%s=%s", attribute.getName(), value);
     }
 
     private Object get(Object actualObject) {

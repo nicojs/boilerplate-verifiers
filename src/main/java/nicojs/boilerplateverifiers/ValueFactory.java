@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers;
 
 import lombok.Getter;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a ValueFactory
@@ -16,5 +17,5 @@ public abstract class ValueFactory<T> {
         this.targetClass = targetClass;
     }
 
-    public abstract T next();
+    public abstract T next(GraphCreationContext graphCreationContext);
 }

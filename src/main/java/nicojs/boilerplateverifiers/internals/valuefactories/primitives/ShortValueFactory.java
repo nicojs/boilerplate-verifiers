@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a ShortValueFactory
@@ -15,7 +16,7 @@ public class ShortValueFactory extends ValueFactory<Short> {
     }
 
     @Override
-    public Short next() {
+    public Short next(GraphCreationContext graphCreationContext) {
         return seed++;
     }
 }

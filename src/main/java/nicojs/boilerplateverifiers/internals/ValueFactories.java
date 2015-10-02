@@ -1,9 +1,10 @@
 package nicojs.boilerplateverifiers.internals;
 
+import nicojs.boilerplateverifiers.GraphStrategy;
 import nicojs.boilerplateverifiers.ValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.ComplexObjectValueFactory;
 import nicojs.boilerplateverifiers.internals.valuefactories.EnumValueFactory;
-import nicojs.boilerplateverifiers.internals.valuefactories.InvocationContext;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,6 @@ import java.util.Map;
 public class ValueFactories {
 
     private final static Map<Class, Class> SIMPLIFICATION_MAP;
-    private final InvocationContext context;
 
     static{
         SIMPLIFICATION_MAP = new HashMap<>();
@@ -31,24 +31,19 @@ public class ValueFactories {
 
     private Map<Class, ValueFactory> factoryMap;
 
-    public ValueFactories(InvocationContext context){
-        this.context = context;
+    public ValueFactories(){
         factoryMap = new HashMap<>();
     }
 
-    public ValueFactories() {
-        this(new InvocationContext());
-    }
-
     @SuppressWarnings("unchecked")
-    public ValueFactory get(Class clazz) {
+    private ValueFactory get(Class clazz) {
         Class simplifiedClass = simplify(clazz);
         ValueFactory valueFactory = factoryMap.get(simplifiedClass);
         if (valueFactory == null) {
             if (simplifiedClass.isEnum()) {
                 valueFactory = new EnumValueFactory(simplifiedClass);
             } else {
-                valueFactory = new ComplexObjectValueFactory(simplifiedClass, this, context);
+                valueFactory = new ComplexObjectValueFactory(simplifiedClass, this);
             }
             factoryMap.put(simplifiedClass, valueFactory);
         }
@@ -63,8 +58,8 @@ public class ValueFactories {
         return simpleClass;
     }
 
-    public Object provideNextValue(Class clazz) {
-        return get(clazz).next();
+    public Object provideNextValue(Class clazz, GraphCreationContext graphCreationContext) {
+        return get(clazz).next(graphCreationContext);
     }
 
     public void putIfNotExists(ValueFactory... valueFactories) {

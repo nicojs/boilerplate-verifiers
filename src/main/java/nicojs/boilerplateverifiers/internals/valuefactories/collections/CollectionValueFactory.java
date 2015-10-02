@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.internals.valuefactories.collections;
 
 import nicojs.boilerplateverifiers.internals.Producer;
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
 
 import java.util.Collection;
@@ -23,9 +24,9 @@ public abstract class CollectionValueFactory<T extends Collection> extends Value
 
     @SuppressWarnings("unchecked")
     @Override
-    public T next() {
+    public T next(GraphCreationContext graphCreationContext) {
         T next = producer.produce();
-        next.add(seed.next());
+        next.add(seed.next(graphCreationContext));
         return next;
     }
 }

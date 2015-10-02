@@ -7,6 +7,7 @@ import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMet
 import nicojs.boilerplateverifiers.examples.manual.ClassWithBuilderPrefix;
 import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
 import nicojs.boilerplateverifiers.examples.manual.SubClass;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -195,7 +196,7 @@ public class BuilderVerifierTest {
         final Person person = Person.builder().build();
         BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class) {
             @Override
-            public Person next() {
+            public Person next(GraphCreationContext graphCreationContext) {
                 return person;
             }
         }).verify();

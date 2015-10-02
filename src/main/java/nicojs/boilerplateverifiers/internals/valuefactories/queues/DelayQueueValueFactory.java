@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.queues;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.concurrent.DelayQueue;
 
@@ -14,7 +15,7 @@ public class DelayQueueValueFactory extends ValueFactory<DelayQueue> {
     }
 
     @Override
-    public DelayQueue next() {
+    public DelayQueue next(GraphCreationContext graphCreationContext) {
         return new DelayQueue(); // New DelayQueue is always unique
     }
 }

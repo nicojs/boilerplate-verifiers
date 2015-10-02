@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a IntValueFactory
@@ -14,7 +15,7 @@ public class IntValueFactory extends ValueFactory<Integer> {
     }
 
     @Override
-    public Integer next(){
+    public Integer next(GraphCreationContext graphCreationContext){
         return seed++;
     }
 }

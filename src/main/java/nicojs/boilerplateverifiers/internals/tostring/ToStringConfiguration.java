@@ -3,7 +3,7 @@ package nicojs.boilerplateverifiers.internals.tostring;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import nicojs.boilerplateverifiers.internals.GraphStrategy;
+import nicojs.boilerplateverifiers.GraphStrategy;
 
 /**
  * Represents a ToStringConfiguration
@@ -17,7 +17,7 @@ public class ToStringConfiguration {
     private GraphStrategy graphStrategy;
 
     public static ToStringConfiguration of(Class<?> targetClass) {
-        return new ToStringConfiguration(targetClass, GraphStrategy.LOOPING_NODE_TREE);
+        return new ToStringConfiguration(targetClass, GraphStrategy.LOOPING_TREE);
     }
 
     public void setGraphStrategy(GraphStrategy graphStrategy) {

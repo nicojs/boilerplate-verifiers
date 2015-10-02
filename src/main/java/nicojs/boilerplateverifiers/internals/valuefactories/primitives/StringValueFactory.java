@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a StringValueFactory
@@ -15,7 +16,7 @@ public class StringValueFactory extends ValueFactory<String> {
 
 
     @Override
-    public String next() {
+    public String next(GraphCreationContext graphCreationContext) {
         return String.format("String$%s", Integer.toString(seed++));
     }
 }

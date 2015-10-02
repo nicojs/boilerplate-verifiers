@@ -5,6 +5,7 @@ import nicojs.boilerplateverifiers.internals.BuildPropertyAccessor;
 import nicojs.boilerplateverifiers.internals.BuilderConfiguration;
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueFactories;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import static org.junit.Assert.fail;
  */
 public class BuilderVerifier {
 
+    public static final GraphStrategy GRAPH_STRATEGY_FOR_BUILDER = GraphStrategy.SELF_REFERENCING;
     private ValueFactories valueFactories;
     private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
@@ -191,7 +193,7 @@ public class BuilderVerifier {
     private void populateBuilder() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
             Class<?> propertyClass = buildProperty.getPropertyClass();
-            Object value = valueFactories.provideNextValue(propertyClass);
+            Object value = valueFactories.provideNextValue(propertyClass, new GraphCreationContext(GRAPH_STRATEGY_FOR_BUILDER));
             try {
                 Object builderInstance = buildProperty.populate(value);
                 assertThat(String.format("Builder method for \"%s\" does not return the instance of \"%s\". Add 'return this' as a final statement of the method.",

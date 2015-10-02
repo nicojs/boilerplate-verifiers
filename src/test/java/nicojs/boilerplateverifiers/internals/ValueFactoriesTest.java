@@ -1,6 +1,8 @@
 package nicojs.boilerplateverifiers.internals;
 
+import nicojs.boilerplateverifiers.GraphStrategy;
 import nicojs.boilerplateverifiers.examples.lombok.ClassWithRecursiveAttribute;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,17 +54,17 @@ public class ValueFactoriesTest {
         }){
             assertFirst100ValuesAreUnique(clazz);
         }
-        assertValuesAreUnique(EnumSet.class, 10);
+        assertFirstNValuesAreUnique(EnumSet.class, 10);
     }
 
     @Test
     public void provideNextValue_first2ValuesOfBoolean_areUnique() {
-        assertValuesAreUnique(boolean.class, 2);
+        assertFirstNValuesAreUnique(boolean.class, 2);
     }
 
     @Test
     public void provideNextValue_first10ValuesOfClass_areUnique() {
-        assertValuesAreUnique(Class.class, 10);
+        assertFirstNValuesAreUnique(Class.class, 10);
     }
 
     @Test
@@ -106,19 +108,19 @@ public class ValueFactoriesTest {
     }
 
     @Test
-    public void provideNextValue_classWithRecursiveAttribute_first100ValuesAreUnique(){
+    public void provideNextValue_classWithRecursiveAttribute_firstValuesAreUnique(){
         assertFirst100ValuesAreUnique(ClassWithRecursiveAttribute.class);
     }
 
     private void assertFirst100ValuesAreUnique(Class clazz) {
-        assertValuesAreUnique(clazz, 100);
+        assertFirstNValuesAreUnique(clazz, 100);
     }
 
     @SuppressWarnings("unchecked")
-    private void assertValuesAreUnique(Class clazz, int n) {
+    private void assertFirstNValuesAreUnique(Class clazz, int n) {
         Set valueSet = new HashSet();
         for (int i = 0; i < n; i++) {
-            Object newValue = sut.provideNextValue(clazz);
+            Object newValue = sut.provideNextValue(clazz, new GraphCreationContext(GraphStrategy.TREE));
             assertThat(String.format("Value \"%s\" double created for class \"%s\"", newValue, clazz.getSimpleName()), valueSet.add(newValue), is(true));
         }
     }

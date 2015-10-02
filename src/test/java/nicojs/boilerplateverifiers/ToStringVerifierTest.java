@@ -1,7 +1,6 @@
 package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.examples.tostring.*;
-import nicojs.boilerplateverifiers.internals.GraphStrategy;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -40,10 +39,17 @@ public class ToStringVerifierTest {
         ToStringVerifier.forClass(NodeWithSmartRecursiveToString.class).verify();
     }
 
+
     @Test
-    public void verify_nodeTreeWithRecursiveToStringAndGraphTree_passes(){
+    public void verify_treeGraphWithRecursiveToStringAndGraphTreeWithLoops_fails(){
+        assertError(NodeWithRecursiveToString.class,
+                "The invocation of the toString resulted in a StackOverflow error. An object of type \"NodeWithRecursiveToString\" was created with a graph (structure of objects) which contain looping references");
+    }
+
+    @Test
+    public void verify_treeGraphStrategyWithRecursiveToString_passes(){
         ToStringVerifier.forClass(NodeWithRecursiveToString.class)
-                .withGraphStrategy(GraphStrategy.NODE_TREE)
+                .withGraphStrategy(GraphStrategy.TREE)
                 .verify();
     }
 

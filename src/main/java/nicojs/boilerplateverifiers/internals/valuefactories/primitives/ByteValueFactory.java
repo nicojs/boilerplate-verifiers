@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a ByteValueFactory
@@ -15,7 +16,7 @@ public class ByteValueFactory extends ValueFactory<Byte> {
     }
 
     @Override
-    public Byte next() {
+    public Byte next(GraphCreationContext graphCreationContext) {
         return seed++;
     }
 }

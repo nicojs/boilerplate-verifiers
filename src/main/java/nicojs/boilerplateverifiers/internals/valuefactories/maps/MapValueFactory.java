@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.internals.valuefactories.maps;
 
 import nicojs.boilerplateverifiers.internals.Producer;
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
 
 import java.util.Map;
@@ -37,9 +38,9 @@ public class MapValueFactory<T extends Map> extends ValueFactory<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public T next() {
+    public T next(GraphCreationContext graphCreationContext) {
         T next = producer.produce();
-        next.put(seed.next(), seed.next());
+        next.put(seed.next(graphCreationContext), seed.next(graphCreationContext));
         return next;
     }
 }
