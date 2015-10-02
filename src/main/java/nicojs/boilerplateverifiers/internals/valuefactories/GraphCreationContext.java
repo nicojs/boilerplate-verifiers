@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a InstantiationContextProvider
+ * Represents a context which is responsible for containing state about a graph that is being created.
+ * A graph in this context is any complex object of which its attributes in turn are instantiated (recursively).
  * Created by nicojs on 8/21/2015.
  */
 public class GraphCreationContext {
