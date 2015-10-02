@@ -55,9 +55,9 @@ public class ToStringVerifier {
         } catch (StackOverflowError stackOverflowError) {
             throw new AssertionError(String.format("The invocation of the toString resulted in a StackOverflow error. An object of type \"%s\" was created with a graph (structure of objects) which contain looping references back to objects earlier specified." +
                             System.lineSeparator() +
-                            "For example Parent <==> Child, where the ToString of the parent calls the ToString of the child, the ToString of the child in turn calls the ToString of the parent, etc." +
+                            "For example Parent <==> Child, where the toString of the parent calls the toString of the child, the toString of the child in turn calls the toString of the parent, etc." +
                             System.lineSeparator() +
-                            "Consider making your ToString implementation survive these loops in graphs, or use the withGraphStrategy method to change the graph strategy to a non-looping one.",
+                            "Consider making your toString implementation survive these loops in graphs, or use the withGraphStrategy method to change the graph strategy to a non-looping one.",
                     configuration.getTargetClass().getSimpleName(), configuration.getTargetClass().getSimpleName()), stackOverflowError);
         }
     }
