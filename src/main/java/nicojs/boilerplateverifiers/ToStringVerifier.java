@@ -1,7 +1,7 @@
 package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
-import nicojs.boilerplateverifiers.internals.ValueFactories;
+import nicojs.boilerplateverifiers.internals.ValueProvider;
 import nicojs.boilerplateverifiers.internals.tostring.GraphAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
@@ -14,7 +14,7 @@ import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext
 public class ToStringVerifier {
 
     private final ToStringConfiguration configuration;
-    private ValueFactories valueFactories;
+    private ValueProvider valueProvider;
     private Object instance;
     private String result;
     private GraphAccessor graphAccessor;
@@ -33,8 +33,8 @@ public class ToStringVerifier {
     }
 
     public void verify() {
-        valueFactories = new ValueFactories();
-        JavaValueFactoryArchitect.fill(valueFactories);
+        valueProvider = new ValueProvider();
+        JavaValueFactoryArchitect.fill(valueProvider);
         inspectTargetClass();
         populateNewInstance();
         stringify();
@@ -53,7 +53,7 @@ public class ToStringVerifier {
         try {
             result = instance.toString();
         } catch (StackOverflowError stackOverflowError) {
-            throw new AssertionError(String.format("The invocation of the toString resulted in a StackOverflow error. An object of type \"%s\" was created with a graph (structure of objects) which contain looping references back to objects earlier specified." +
+            throw new AssertionError(String.format("The invocation of the toString resulted in a StackOverflow error. An object of type \"%s\" was created with a graph (structure of objects) which contain looping references back to objects higher in the graph." +
                             System.lineSeparator() +
                             "For example Parent <==> Child, where the toString of the parent calls the toString of the child, the toString of the child in turn calls the toString of the parent, etc." +
                             System.lineSeparator() +
@@ -63,6 +63,6 @@ public class ToStringVerifier {
     }
 
     private void populateNewInstance() {
-        instance = valueFactories.provideNextValue(configuration.getTargetClass(), new GraphCreationContext(configuration.getGraphStrategy()));
+        instance = valueProvider.provideNextValue(configuration.getTargetClass(), new GraphCreationContext(configuration.getGraphStrategy()));
     }
 }

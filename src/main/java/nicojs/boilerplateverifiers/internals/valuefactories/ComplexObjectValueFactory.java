@@ -2,7 +2,7 @@ package nicojs.boilerplateverifiers.internals.valuefactories;
 
 import nicojs.boilerplateverifiers.ValueFactory;
 import nicojs.boilerplateverifiers.internals.Instantiator;
-import nicojs.boilerplateverifiers.internals.ValueFactories;
+import nicojs.boilerplateverifiers.internals.ValueProvider;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -13,11 +13,11 @@ import java.lang.reflect.Modifier;
  */
 public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
 
-    private final ValueFactories valueFactories;
+    private final ValueProvider valueProvider;
 
-    public ComplexObjectValueFactory(Class<T> targetClass, ValueFactories valueFactories) {
+    public ComplexObjectValueFactory(Class<T> targetClass, ValueProvider valueProvider) {
         super(targetClass);
-        this.valueFactories = valueFactories;
+        this.valueProvider = valueProvider;
     }
 
     @SuppressWarnings("unchecked")
@@ -43,7 +43,7 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
             if (!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
                 field.setAccessible(true);
                 try {
-                    field.set(newInstance, valueFactories.provideNextValue(field.getType(), context));
+                    field.set(newInstance, valueProvider.provideNextValue(field.getType(), context));
                 } catch (IllegalAccessException e) {
                     throw new AssertionError(String.format("Could not set field \"%s\" of class \"%s\", which is necessary to instantiate a unique value of class \"%s\".",
                             field.getName(), field.getType().getSimpleName(), clazz.getSimpleName()), e);

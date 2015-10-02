@@ -16,16 +16,16 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Represents a ValueFactoriesTest
+ * Test class for ValueProvider
  * Created by nicojs on 8/17/2015.
  */
-public class ValueFactoriesTest {
+public class ValueProviderTest {
 
-    private ValueFactories sut;
+    private ValueProvider sut;
 
     @Before
     public void initializeSut() {
-        sut = new ValueFactories();
+        sut = new ValueProvider();
         JavaValueFactoryArchitect.fill(sut);
     }
 
