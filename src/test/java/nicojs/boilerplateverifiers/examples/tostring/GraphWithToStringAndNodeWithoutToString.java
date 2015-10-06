@@ -3,11 +3,11 @@ package nicojs.boilerplateverifiers.examples.tostring;
 import lombok.ToString;
 
 /**
- * Represents a GraphWithToStringAndChildWithoutToString
+ * Represents a GraphWithToStringAndNodeWithoutToString
  * Created by nicojs
  */
 @ToString
-public class GraphWithToStringAndChildWithoutToString {
+public class GraphWithToStringAndNodeWithoutToString {
     private PojoWithoutToString pojoWithoutToString;
     private String value;
 }

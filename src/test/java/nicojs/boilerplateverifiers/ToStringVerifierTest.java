@@ -25,7 +25,7 @@ public class ToStringVerifierTest {
 
     @Test
     public void verify_simpleGraphNodeDoesNotImplementToString_fails() {
-        assertError(GraphWithToStringAndChildWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\"). Path to this field is \"pojoWithoutToString.aString\"");
+        assertError(GraphWithToStringAndNodeWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\"). Path to this field is \"pojoWithoutToString.aString\"");
     }
 
     @Test
@@ -35,39 +35,53 @@ public class ToStringVerifierTest {
     }
 
     @Test
-    public void verify_nodeTreeWithSmartRecursiveToString_passes(){
+    public void verify_nodeTreeWithSmartRecursiveToString_passes() {
         ToStringVerifier.forClass(NodeWithSmartRecursiveToString.class).verify();
     }
 
 
     @Test
-    public void verify_treeGraphWithRecursiveToStringAndGraphTreeWithLoops_fails(){
+    public void verify_treeGraphWithRecursiveToStringAndGraphTreeWithLoops_fails() {
         assertError(NodeWithRecursiveToString.class,
                 "The invocation of the toString resulted in a StackOverflow error. An object of type \"NodeWithRecursiveToString\" was created with a graph (structure of objects) which contain looping references");
     }
 
     @Test
-    public void verify_treeGraphStrategyWithRecursiveToString_passes(){
+    public void verify_treeGraphStrategyWithRecursiveToString_passes() {
         ToStringVerifier.forClass(NodeWithRecursiveToString.class)
                 .withGraphStrategy(GraphStrategy.TREE)
                 .verify();
     }
 
     @Test
-    public void verify_inheritanceWithToString_passes(){
+    public void verify_inheritanceWithToString_passes() {
         ToStringVerifier.forClass(InheritanceWithToString.class)
                 .verify();
     }
 
     @Test
-    public void verify_inheritanceWithoutParentWithoutToString_fails(){
+    public void verify_inheritanceWithoutParentWithoutToString_fails() {
         assertError(InheritanceParentWithoutToString.class, "Could not find string representation for field \"aString\" (declared in class \"PojoWithoutToString\"). Path to this field is \"%super.aString\"");
     }
 
+    @Test
+    public void verify_useAllAttributesExceptWhenIgnoringCorrectPath_passes() {
+        ToStringVerifier.forClass(GraphWithToStringAndNodeWithoutToString.class)
+                .useAllAttributesExcept("pojoWithoutToString")
+                .verify();
+        ToStringVerifier.forClass(GraphWithToStringAndNodeWithoutToString.class)
+                .useAllAttributesExcept("pojoWithoutToString.aString")
+                .verify();
+    }
+
     private void assertError(Class targetClass, String expectedSubstring) {
+        assertError(ToStringVerifier.forClass(targetClass), expectedSubstring);
+    }
+
+    private void assertError(ToStringVerifier sut, String expectedSubstring) {
         boolean caught = false;
         try {
-            ToStringVerifier.forClass(targetClass).verify();
+            sut.verify();
         } catch (AssertionError error) {
             assertThat(error.getMessage(), containsString(expectedSubstring));
             caught = true;

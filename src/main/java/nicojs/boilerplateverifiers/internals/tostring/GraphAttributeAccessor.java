@@ -49,7 +49,6 @@ public class GraphAttributeAccessor {
         } else {
             this.path = String.format("%s.%s", currentPath, attribute.getName());
         }
-        attribute.setAccessible(true);
     }
 
     public static List<GraphAttributeAccessor> forClassAttributes(Class targetClass, String currentPath) {
@@ -68,12 +67,14 @@ public class GraphAttributeAccessor {
 
     public void verify(Object actualObject, String actualStringRepresentation, VerificationContext context) {
         final Object actualValue = get(actualObject);
-        if (isComplex() && actualValue != null) {
-            new GraphAccessor(attribute.getType(), path).verifyAttributes(actualValue, actualStringRepresentation, context);
-        } else {
-            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
-            assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
-                    actualStringRepresentation, containsString(expectedStringRepresentation));
+        if(!context.shouldBeIgnored(actualValue, path)) {
+            if (isComplex() && actualValue != null) {
+                new GraphAccessor(attribute.getType(), path).verifyAttributes(actualValue, actualStringRepresentation, context);
+            } else {
+                final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
+                assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
+                        actualStringRepresentation, containsString(expectedStringRepresentation));
+            }
         }
     }
 
@@ -98,6 +99,7 @@ public class GraphAttributeAccessor {
     }
 
     private Object get(Object actualObject) {
+        attribute.setAccessible(true);
         Object value = null;
         try {
             value = attribute.get(actualObject);

@@ -8,8 +8,7 @@ import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
- * Verifier class for the toString builderplate method.
- * Created by nicoj on 8/12/2015.
+ * Verifier class for the toString boilerplate method.
  */
 public class ToStringVerifier {
 
@@ -32,6 +31,11 @@ public class ToStringVerifier {
         return this;
     }
 
+    public ToStringVerifier useAllAttributesExcept(String... paths){
+        configuration.setAttributesBlacklist(paths);
+        return this;
+    }
+
     public void verify() {
         valueProvider = new ValueProvider();
         JavaValueFactoryArchitect.fill(valueProvider);
@@ -42,7 +46,7 @@ public class ToStringVerifier {
     }
 
     private void verifyAllAttributesStringified() {
-        graphAccessor.verifyAttributes(instance, result, new VerificationContext());
+        graphAccessor.verifyAttributes(instance, result, new VerificationContext(configuration.getAttributesBlacklist()));
     }
 
     private void inspectTargetClass() {

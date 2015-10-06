@@ -28,7 +28,7 @@ public class GraphAccessor {
     }
 
     public void verifyAttributes(Object actualObject, String actualStringRepresentation, VerificationContext context) {
-        if (!context.isVerified(actualObject)) {
+        if (!context.shouldBeIgnored(actualObject, path)) {
             if (superAccessor != null) {
                 superAccessor.verifyAttributes(actualObject, actualStringRepresentation, context);
             }
