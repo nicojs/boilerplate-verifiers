@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.internals;
 
 import nicojs.boilerplateverifiers.GraphStrategy;
 import nicojs.boilerplateverifiers.examples.lombok.ClassWithRecursiveAttribute;
+import nicojs.boilerplateverifiers.examples.tostring.InheritanceWithToString;
 import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -110,6 +113,12 @@ public class ValueProviderTest {
     @Test
     public void provideNextValue_classWithRecursiveAttribute_firstValuesAreUnique(){
         assertFirst100ValuesAreUnique(ClassWithRecursiveAttribute.class);
+    }
+
+    @Test
+    public void provideNextValue_complexClassWithInheritance_alsoPopulatesSuperClass(){
+        final InheritanceWithToString value = (InheritanceWithToString) sut.provideNextValue(InheritanceWithToString.class, new GraphCreationContext(GraphStrategy.TREE));
+        assertThat(value.getValue(), is(not(nullValue())));
     }
 
     private void assertFirst100ValuesAreUnique(Class clazz) {

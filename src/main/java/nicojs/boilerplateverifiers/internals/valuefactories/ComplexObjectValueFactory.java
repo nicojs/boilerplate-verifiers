@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * Represents a ClassValueFactory
+ * Represents a ValueFactory for complex objects (generally: entity classes)
  * Created by nicojs on 8/13/2015.
  */
 public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
@@ -32,23 +32,32 @@ public class ComplexObjectValueFactory<T> extends ValueFactory<T> {
             Instantiator instantiator = Instantiator.of(getTargetClass());
             T newInstance = (T) instantiator.instantiate();
             context.addNode(getTargetClass(), newInstance);
-            scramble(newInstance, context);
+            populate(newInstance, context, newInstance.getClass());
             return newInstance;
         }
     }
 
-    private void scramble(T newInstance, GraphCreationContext context) {
-        Class<?> clazz = newInstance.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
-            if (!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
-                field.setAccessible(true);
-                try {
-                    field.set(newInstance, valueProvider.provideNextValue(field.getType(), context));
-                } catch (IllegalAccessException e) {
-                    throw new AssertionError(String.format("Could not set field \"%s\" of class \"%s\", which is necessary to instantiate a unique value of class \"%s\".",
-                            field.getName(), field.getType().getSimpleName(), clazz.getSimpleName()), e);
+    /**
+     * Recursive function for populating the attributes of a given instance.
+     * Uses reflection to set all attributes to new (unique) values.
+     * @param newInstance The instance to populate
+     * @param context The context maintaining the state of the graph that is currently being created.
+     * @param clazz The class of which the attributes will be populated in this iteration (will recursively also populate all superclasses)
+     */
+    private void populate(T newInstance, GraphCreationContext context, Class clazz) {
+        if (clazz != null) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers()) && !isReserved(field.getName())) {
+                    field.setAccessible(true);
+                    try {
+                        field.set(newInstance, valueProvider.provideNextValue(field.getType(), context));
+                    } catch (IllegalAccessException e) {
+                        throw new AssertionError(String.format("Could not set field \"%s\" of class \"%s\", which is necessary to instantiate a unique value of class \"%s\".",
+                                field.getName(), field.getType().getSimpleName(), clazz.getSimpleName()), e);
+                    }
                 }
             }
+            populate(newInstance, context, clazz.getSuperclass());
         }
 
     }

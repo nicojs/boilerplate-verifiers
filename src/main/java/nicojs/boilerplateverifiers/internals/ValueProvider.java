@@ -16,7 +16,7 @@ public class ValueProvider {
 
     private final static Map<Class, Class> SIMPLIFICATION_MAP;
 
-    static{
+    static {
         SIMPLIFICATION_MAP = new HashMap<>();
         SIMPLIFICATION_MAP.put(Boolean.class, boolean.class);
         SIMPLIFICATION_MAP.put(Byte.class, byte.class);
@@ -30,7 +30,7 @@ public class ValueProvider {
 
     private Map<Class, ValueFactory> factoryMap;
 
-    public ValueProvider(){
+    public ValueProvider() {
         factoryMap = new HashMap<>();
     }
 
@@ -51,13 +51,13 @@ public class ValueProvider {
 
     private Class simplify(Class clazz) {
         Class simpleClass = SIMPLIFICATION_MAP.get(clazz);
-        if(simpleClass == null){
+        if (simpleClass == null) {
             simpleClass = clazz;
         }
         return simpleClass;
     }
 
-    public Object provideNextValue(Class clazz, GraphCreationContext graphCreationContext) {
+    public Object provideNextValue(Class<?> clazz, GraphCreationContext graphCreationContext) {
         return findValueFactory(clazz).next(graphCreationContext);
     }
 
