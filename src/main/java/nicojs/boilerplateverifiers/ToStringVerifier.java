@@ -2,7 +2,7 @@ package nicojs.boilerplateverifiers;
 
 import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueProvider;
-import nicojs.boilerplateverifiers.internals.tostring.GraphAccessor;
+import nicojs.boilerplateverifiers.internals.tostring.GraphNodeAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
@@ -16,7 +16,7 @@ public class ToStringVerifier {
     private ValueProvider valueProvider;
     private Object instance;
     private String result;
-    private GraphAccessor graphAccessor;
+    private GraphNodeAccessor graphAccessor;
 
     private ToStringVerifier(Class<?> targetClass) {
         configuration = ToStringConfiguration.of(targetClass);
@@ -39,18 +39,18 @@ public class ToStringVerifier {
     public void verify() {
         valueProvider = new ValueProvider();
         JavaValueFactoryArchitect.fill(valueProvider);
-        inspectTargetClass();
         populateNewInstance();
+        inspectGraph();
         stringify();
         verifyAllAttributesStringified();
     }
 
     private void verifyAllAttributesStringified() {
-        graphAccessor.verifyAttributes(instance, result, new VerificationContext(configuration.getAttributesBlacklist()));
+        graphAccessor.verifyAttributes(result, new VerificationContext(configuration.getAttributesBlacklist()));
     }
 
-    private void inspectTargetClass() {
-        graphAccessor = new GraphAccessor(configuration.getTargetClass());
+    private void inspectGraph() {
+        graphAccessor = new GraphNodeAccessor(configuration.getTargetClass(), instance);
     }
 
     private void stringify() {

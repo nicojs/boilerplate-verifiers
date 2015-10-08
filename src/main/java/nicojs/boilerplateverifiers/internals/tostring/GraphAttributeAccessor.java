@@ -40,22 +40,28 @@ public class GraphAttributeAccessor {
             String.class
     );
     private final Field attribute;
+    private final Object nodeValue;
     private final String path;
+    private GraphNodeAccessor nodeAccessor;
 
-    public GraphAttributeAccessor(Field attribute, @NonNull String currentPath) {
+    public GraphAttributeAccessor(Field attribute, @NonNull Object nodeValue, @NonNull String currentPath, GraphAccessorCreationContext context) {
         this.attribute = attribute;
+        this.nodeValue = nodeValue;
         if ("".equals(currentPath)) {
             this.path = attribute.getName();
         } else {
             this.path = String.format("%s.%s", currentPath, attribute.getName());
         }
+        if (isNode() && context.shouldInspect(getValue())) {
+            nodeAccessor = new GraphNodeAccessor(attribute.getType(), getValue(), path, context);
+        }
     }
 
-    public static List<GraphAttributeAccessor> forClassAttributes(Class targetClass, String currentPath) {
+    public static List<GraphAttributeAccessor> forAttributes(Class targetClass, Object nodeValue, String currentPath, GraphAccessorCreationContext context) {
         List<GraphAttributeAccessor> attributes = new ArrayList<>();
         for (Field field : targetClass.getDeclaredFields()) {
             if (isValid(field)) {
-                attributes.add(new GraphAttributeAccessor(field, currentPath));
+                attributes.add(new GraphAttributeAccessor(field, nodeValue, currentPath, context));
             }
         }
         return attributes;
@@ -65,11 +71,13 @@ public class GraphAttributeAccessor {
         return !Modifier.isStatic(field.getModifiers());
     }
 
-    public void verify(Object actualObject, String actualStringRepresentation, VerificationContext context) {
-        final Object actualValue = get(actualObject);
-        if(!context.shouldBeIgnored(actualValue, path)) {
-            if (isComplex() && actualValue != null) {
-                new GraphAccessor(attribute.getType(), path).verifyAttributes(actualValue, actualStringRepresentation, context);
+    public void verify(String actualStringRepresentation, VerificationContext context) {
+        final Object actualValue = getValue();
+        if (!context.shouldBeIgnored(path)) {
+            if (isNode()) {
+                if (nodeAccessor != null) {
+                    nodeAccessor.verifyAttributes(actualStringRepresentation, context);
+                }
             } else {
                 final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
                 assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
@@ -78,7 +86,7 @@ public class GraphAttributeAccessor {
         }
     }
 
-    private boolean isComplex() {
+    private boolean isNode() {
         return !isMap() && !isCollection() && !isPrimitive();
     }
 
@@ -98,11 +106,11 @@ public class GraphAttributeAccessor {
         return String.format("%s=%s", attribute.getName(), value);
     }
 
-    private Object get(Object actualObject) {
+    private Object getValue() {
         attribute.setAccessible(true);
         Object value = null;
         try {
-            value = attribute.get(actualObject);
+            value = attribute.get(nodeValue);
         } catch (IllegalAccessException e) {
             fail(String.format("Field \"%s\" of class \"%s\" is not accessible", attribute.getName(), attribute.getDeclaringClass().getSimpleName()));
         }

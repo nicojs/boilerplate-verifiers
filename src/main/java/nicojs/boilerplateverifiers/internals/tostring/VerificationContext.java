@@ -18,22 +18,9 @@ public class VerificationContext {
         this.pathsToIgnore = Arrays.asList(pathsToIgnore);
     }
 
-    public void addVerifiedObject(Object verifiedObject) {
-        verifiedObjects.add(verifiedObject);
-    }
 
-    public boolean shouldBeIgnored(Object maybeVerifiedObject, String pathToObject){
-        return isVerified(maybeVerifiedObject) || isIgnored(pathToObject);
-    }
-
-    private boolean isVerified(Object maybeVerifiedObject) {
-        for (Object verifiedObject : verifiedObjects) {
-            // Deliberate test for reference equality
-            if (verifiedObject == maybeVerifiedObject) {
-                return true;
-            }
-        }
-        return false;
+    public boolean shouldBeIgnored(String pathToObject){
+        return isIgnored(pathToObject);
     }
 
     private boolean isIgnored(String path){
