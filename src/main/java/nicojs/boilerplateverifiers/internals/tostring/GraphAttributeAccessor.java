@@ -73,18 +73,16 @@ public class GraphAttributeAccessor {
         return !Modifier.isStatic(field.getModifiers());
     }
 
-    public void verify(String actualStringRepresentation, VerificationContext context) {
+    public void verify(String actualStringRepresentation) {
         final Object actualValue = getValue();
-        if (!context.shouldBeIgnored(path)) {
-            if (isNode()) {
-                if (nodeAccessor != null) {
-                    nodeAccessor.verifyAttributes(actualStringRepresentation, context);
-                }
-            } else {
-                final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
-                assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
-                        actualStringRepresentation, containsString(expectedStringRepresentation));
+        if (isNode()) {
+            if (nodeAccessor != null) {
+                nodeAccessor.verifyAttributes(actualStringRepresentation);
             }
+        } else {
+            final String expectedStringRepresentation = formatExpectedStringRepresentation(actualValue);
+            assertThat(String.format("Could not find string representation for field \"%s\" (declared in class \"%s\"). Path to this field is \"%s\".", attribute.getName(), attribute.getDeclaringClass().getSimpleName(), path),
+                    actualStringRepresentation, containsString(expectedStringRepresentation));
         }
     }
 
@@ -120,9 +118,9 @@ public class GraphAttributeAccessor {
     }
 
     public List<String> remove(List<String> paths) {
-        if(nodeAccessor != null){
+        if (nodeAccessor != null) {
             return nodeAccessor.remove(paths);
-        }else{
+        } else {
             return paths;
         }
     }

@@ -4,7 +4,6 @@ import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
 import nicojs.boilerplateverifiers.internals.ValueProvider;
 import nicojs.boilerplateverifiers.internals.tostring.GraphNodeAccessor;
 import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
-import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.Arrays;
@@ -54,7 +53,7 @@ public class ToStringVerifier {
     }
 
     private void verifyAllAttributesStringified() {
-        graphAccessor.verifyAttributes(result, new VerificationContext(configuration.getAttributesBlacklist()));
+        graphAccessor.verifyAttributes(result);
     }
 
     private void inspectGraph() {

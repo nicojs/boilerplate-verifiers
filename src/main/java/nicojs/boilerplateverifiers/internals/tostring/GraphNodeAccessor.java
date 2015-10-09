@@ -40,15 +40,13 @@ public class GraphNodeAccessor {
         }
     }
 
-    public void verifyAttributes(String actualStringRepresentation, VerificationContext context) {
-        if (!context.shouldBeIgnored(path)) {
-            if (superAccessor != null) {
-                superAccessor.verifyAttributes(actualStringRepresentation, context);
-            }
+    public void verifyAttributes(String actualStringRepresentation) {
+        if (superAccessor != null) {
+            superAccessor.verifyAttributes(actualStringRepresentation);
+        }
 
-            for (GraphAttributeAccessor attribute : attributeAccessors) {
-                attribute.verify(actualStringRepresentation, context);
-            }
+        for (GraphAttributeAccessor attribute : attributeAccessors) {
+            attribute.verify(actualStringRepresentation);
         }
     }
 
@@ -71,7 +69,7 @@ public class GraphNodeAccessor {
     }
 
     private List<String> removeFromSuperAccessorGraph(List<String> pathsToRemove) {
-        if(superAccessor!=null){
+        if (superAccessor != null) {
             pathsToRemove = superAccessor.remove(pathsToRemove);
         }
         return pathsToRemove;
@@ -81,7 +79,7 @@ public class GraphNodeAccessor {
         for (String path : pathsToRemove) {
             List<GraphAttributeAccessor> attributeAccessorsToRemove = new ArrayList<>();
             for (GraphAttributeAccessor attributeAccessor : attributeAccessors) {
-                if(path.equals(attributeAccessor.getPath())){
+                if (path.equals(attributeAccessor.getPath())) {
                     attributeAccessorsToRemove.add(attributeAccessor);
                     pathsFound.add(path);
                 }
