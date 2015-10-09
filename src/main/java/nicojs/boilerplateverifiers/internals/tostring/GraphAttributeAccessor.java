@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.tostring;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.lang.reflect.Field;
@@ -41,6 +42,7 @@ public class GraphAttributeAccessor {
     );
     private final Field attribute;
     private final Object nodeValue;
+    @Getter
     private final String path;
     private GraphNodeAccessor nodeAccessor;
 
@@ -115,5 +117,13 @@ public class GraphAttributeAccessor {
             fail(String.format("Field \"%s\" of class \"%s\" is not accessible", attribute.getName(), attribute.getDeclaringClass().getSimpleName()));
         }
         return value;
+    }
+
+    public List<String> remove(List<String> paths) {
+        if(nodeAccessor != null){
+            return nodeAccessor.remove(paths);
+        }else{
+            return paths;
+        }
     }
 }

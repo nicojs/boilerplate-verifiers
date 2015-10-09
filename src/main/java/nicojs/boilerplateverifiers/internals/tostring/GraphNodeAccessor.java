@@ -12,8 +12,8 @@ public class GraphNodeAccessor {
     private final Class targetClass;
     private final Object value;
     private final String path;
-    private GraphNodeAccessor superAccessor;
     private final List<GraphAttributeAccessor> attributeAccessors;
+    private GraphNodeAccessor superAccessor;
 
 
     public GraphNodeAccessor(Class targetClass, Object value) {
@@ -48,6 +48,57 @@ public class GraphNodeAccessor {
 
             for (GraphAttributeAccessor attribute : attributeAccessors) {
                 attribute.verify(actualStringRepresentation, context);
+            }
+        }
+    }
+
+    public List<String> remove(List<String> pathsToRemove) {
+        pathsToRemove = new ArrayList<>(pathsToRemove); // copy over to make sure 'remove' is supported
+        List<String> pathsFound = new ArrayList<>();
+        removeSuperAccessorIfNeeded(pathsToRemove, pathsFound);
+        removeAttributeAccessorsIfNeeded(pathsToRemove, pathsFound);
+        pathsToRemove.removeAll(pathsFound);
+        pathsToRemove = removeFromSuperAccessorGraph(pathsToRemove);
+        pathsToRemove = removeFromAttributeAccessorGraphs(pathsToRemove);
+        return pathsToRemove;
+    }
+
+    private List<String> removeFromAttributeAccessorGraphs(List<String> pathsToRemove) {
+        for (GraphAttributeAccessor attributeAccessor : attributeAccessors) {
+            pathsToRemove = attributeAccessor.remove(pathsToRemove);
+        }
+        return pathsToRemove;
+    }
+
+    private List<String> removeFromSuperAccessorGraph(List<String> pathsToRemove) {
+        if(superAccessor!=null){
+            pathsToRemove = superAccessor.remove(pathsToRemove);
+        }
+        return pathsToRemove;
+    }
+
+    private void removeAttributeAccessorsIfNeeded(List<String> pathsToRemove, List<String> pathsFound) {
+        for (String path : pathsToRemove) {
+            List<GraphAttributeAccessor> attributeAccessorsToRemove = new ArrayList<>();
+            for (GraphAttributeAccessor attributeAccessor : attributeAccessors) {
+                if(path.equals(attributeAccessor.getPath())){
+                    attributeAccessorsToRemove.add(attributeAccessor);
+                    pathsFound.add(path);
+                }
+            }
+            for (GraphAttributeAccessor graphAttributeAccessor : attributeAccessorsToRemove) {
+                attributeAccessors.remove(graphAttributeAccessor);
+            }
+        }
+    }
+
+    private void removeSuperAccessorIfNeeded(List<String> pathsToRemove, List<String> pathsFound) {
+        for (String path : pathsToRemove) {
+            if (superAccessor != null) {
+                if (path.equals(superAccessor.path)) {
+                    superAccessor = null;
+                    pathsFound.add(path);
+                }
             }
         }
     }

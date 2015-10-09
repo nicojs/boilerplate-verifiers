@@ -7,6 +7,13 @@ import nicojs.boilerplateverifiers.internals.tostring.ToStringConfiguration;
 import nicojs.boilerplateverifiers.internals.tostring.VerificationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 /**
  * Verifier class for the toString boilerplate method.
  */
@@ -41,6 +48,7 @@ public class ToStringVerifier {
         JavaValueFactoryArchitect.fill(valueProvider);
         populateNewInstance();
         inspectGraph();
+        removeIgnoredPaths();
         stringify();
         verifyAllAttributesStringified();
     }
@@ -51,6 +59,12 @@ public class ToStringVerifier {
 
     private void inspectGraph() {
         graphAccessor = new GraphNodeAccessor(configuration.getTargetClass(), instance);
+    }
+
+    private void removeIgnoredPaths() {
+        final List<String> pathsNotFound = graphAccessor.remove(Arrays.asList(configuration.getAttributesBlacklist()));
+        assertThat(String.format("Could not find attribute with path(s) %s in graph. The list of path's found in graph was: ", pathsNotFound),
+                pathsNotFound, is(empty()));
     }
 
     private void stringify() {
