@@ -62,7 +62,8 @@ public class ToStringVerifier {
 
     private void removeIgnoredPaths() {
         final List<String> pathsNotFound = graphAccessor.remove(Arrays.asList(configuration.getAttributesBlacklist()));
-        assertThat(String.format("Could not find attribute with path(s) %s in graph. The list of path's found in graph was: ", pathsNotFound),
+        assertThat(String.format("Could not find attribute with path(s) %s in graph. The list of paths found in graph were: %s",
+                        pathsNotFound, graphAccessor.retrievePaths()),
                 pathsNotFound, is(empty()));
     }
 

@@ -100,4 +100,18 @@ public class GraphNodeAccessor {
             }
         }
     }
+
+    public List<String> retrievePaths() {
+        List<String> paths = new ArrayList<>();
+        if(!path.isEmpty()) {
+            paths.add(path);
+        }
+        for (GraphAttributeAccessor attributeAccessor : attributeAccessors) {
+            paths.addAll(attributeAccessor.retrievePaths());
+        }
+        if(superAccessor != null){
+            paths.addAll(superAccessor.retrievePaths());
+        }
+        return paths;
+    }
 }

@@ -35,7 +35,7 @@ Work in progress:
   4. ~~Support for inheritance (also uses toString of super class)~~
   5. Support for more scenarios using settings
     1. Configure the key-value template
-    2. Configure graph blacklist using the path.
+    2. ~~Configure graph blacklist using the path.~~
     3. Configure inheritance behavior.
     4. Configure shallow toString behavior.
 3. Implement GetterSetterVerifier

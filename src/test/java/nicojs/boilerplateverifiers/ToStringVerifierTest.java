@@ -76,8 +76,12 @@ public class ToStringVerifierTest {
 
     @Test
     public void verify_usingNonExistingAttributesToIgnore_fails(){
-        assertError(ToStringVerifier.forClass(InheritanceWithToString.class).useAllAttributesExcept("notExists"),
-                "Could not find attribute with path(s) [notExists] in graph. The list of path's found in graph was: ");
+        assertError(ToStringVerifier.forClass(InheritanceWithToString.class)
+                        .useAllAttributesExcept("notExists"),
+                "Could not find attribute with path(s) [notExists] in graph. The list of paths found in graph were: [name, %super, %super.age, %super.value, %super.theDouble, %super%super]");
+        assertError(ToStringVerifier.forClass(InheritanceWithToString.class)
+                        .useAllAttributesExcept("%super", "%super.age"),
+                "Could not find attribute with path(s) [%super.age] in graph. The list of paths found in graph were: [name]");
     }
 
     private void assertError(Class targetClass, String expectedSubstring) {

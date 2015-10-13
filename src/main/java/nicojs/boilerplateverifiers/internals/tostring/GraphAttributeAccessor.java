@@ -124,4 +124,13 @@ public class GraphAttributeAccessor {
             return paths;
         }
     }
+
+    public List<String> retrievePaths() {
+        List<String> paths = new ArrayList<>();
+        paths.add(path);
+        if(nodeAccessor != null){
+            paths.addAll(nodeAccessor.retrievePaths());
+        }
+        return paths;
+    }
 }
