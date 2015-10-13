@@ -28,16 +28,16 @@ public class JavaValueFactoryArchitect {
     private JavaValueFactoryArchitect() {
     }
 
-    public static void fill(ValueFactories valueFactories) {
-        fillPrimitiveClasses(valueFactories);
-        fillCollectionClasses(valueFactories);
-        fillMapClasses(valueFactories);
-        fillSetClasses(valueFactories);
-        fillQueueClasses(valueFactories);
+    public static void fill(ValueProvider valueProvider) {
+        fillPrimitiveClasses(valueProvider);
+        fillCollectionClasses(valueProvider);
+        fillMapClasses(valueProvider);
+        fillSetClasses(valueProvider);
+        fillQueueClasses(valueProvider);
     }
 
-    private static void fillMapClasses(ValueFactories valueFactories) {
-        valueFactories.putIfNotExists(
+    private static void fillMapClasses(ValueProvider valueProvider) {
+        valueProvider.addValueFactory(
                 new ConcurrentHashMapValueFactory(),
                 new ConcurrentNavigableMapValueFactory(),
                 new EnumMapValueFactory(),
@@ -58,16 +58,16 @@ public class JavaValueFactoryArchitect {
         );
     }
 
-    private static void fillCollectionClasses(ValueFactories valueFactories) {
-        valueFactories.putIfNotExists(
+    private static void fillCollectionClasses(ValueProvider valueProvider) {
+        valueProvider.addValueFactory(
                 new ArrayListValueFactory(),
                 new ListValueFactory(),
                 new LinkedListValueFactory(),
                 new CopyOnWriteArrayListValueFactory());
     }
 
-    private static void fillPrimitiveClasses(ValueFactories valueFactories) {
-        valueFactories.putIfNotExists(
+    private static void fillPrimitiveClasses(ValueProvider valueProvider) {
+        valueProvider.addValueFactory(
                 new AtomicIntegerValueFactory(),
                 new BooleanValueFactory(),
                 new ByteValueFactory(),
@@ -81,8 +81,8 @@ public class JavaValueFactoryArchitect {
                 new StringValueFactory());
     }
 
-    private static void fillSetClasses(ValueFactories valueFactories) {
-        valueFactories.putIfNotExists(
+    private static void fillSetClasses(ValueProvider valueProvider) {
+        valueProvider.addValueFactory(
                 new BitSetValueFactory(),
                 new CopyOnWriteArraySetValueFactory(),
                 new EnumSetValueFactory(),
@@ -94,8 +94,8 @@ public class JavaValueFactoryArchitect {
         );
     }
 
-    private static void fillQueueClasses(ValueFactories valueFactories) {
-        valueFactories.putIfNotExists(
+    private static void fillQueueClasses(ValueProvider valueProvider) {
+        valueProvider.addValueFactory(
                 new ArrayBlockingQueueValueFactory(),
                 new BlockingDequeValueFactory(),
                 new BlockingQueueValueFactory(),

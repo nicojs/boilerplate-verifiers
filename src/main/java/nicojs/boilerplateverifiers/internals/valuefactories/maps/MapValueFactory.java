@@ -2,6 +2,7 @@ package nicojs.boilerplateverifiers.internals.valuefactories.maps;
 
 import nicojs.boilerplateverifiers.internals.Producer;
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
 
 import java.util.Map;
@@ -25,7 +26,7 @@ public class MapValueFactory<T extends Map> extends ValueFactory<T> {
         addMap(SortedMap.class, new TreeMap(), new TreeMap());
         addMap(NavigableMap.class, new TreeMap(), new TreeMap());
         addMap(ConcurrentNavigableMap.class, new ConcurrentSkipListMap(), new ConcurrentSkipListMap());
-        prefabValues.put(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
+        prefabValues.add(EnumMap.class, Dummy.RED.map(), Dummy.BLACK.map());
         addMap(ConcurrentHashMap.class, new ConcurrentHashMap(), new ConcurrentHashMap());
         addMap(HashMap.class, new HashMap(), new HashMap());
         addMap(Hashtable.class, new Hashtable(), new Hashtable());
@@ -37,9 +38,9 @@ public class MapValueFactory<T extends Map> extends ValueFactory<T> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public T next() {
+    public T next(GraphCreationContext graphCreationContext) {
         T next = producer.produce();
-        next.put(seed.next(), seed.next());
+        next.put(seed.next(graphCreationContext), seed.next(graphCreationContext));
         return next;
     }
 }

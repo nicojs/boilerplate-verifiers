@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a CharValueFactory
@@ -16,7 +17,7 @@ public class CharValueFactory extends ValueFactory<Character> {
 
 
     @Override
-    public Character next() {
+    public Character next(GraphCreationContext graphCreationContext) {
         return seed++;
     }
 }

@@ -20,15 +20,24 @@ Work in progress:
   4. ~~Support for inheritance in the builder classes themselves~~
   5. ~~Verify that no attribute can be set after build.~~
   6. ~~Verify the builder constructor is not accessible from the outside.~~
-  7. Support for more scenarios using settings
+  7. ~~Support for more scenarios using settings~~
     1. ~~Support for attribute blacklist~~
     2. ~~Support for builder class method blacklist~~
     3. ~~Force don't use getter's to verify attribute values~~
     4. ~~Support for custom value factories~~
     5. ~~Support for not buildable Super classes~~
     6. ~~Support for prefixed methods on builder class (i.e. "withAge()", "withName()", etc)~~
-    7. Support for changing variables after build.
+    7. ~~Support for ignoring verification of attribute accessibility.~~
 2. Implement ToStringVerifier
+  1. ~~Support for POJOS~~
+  2. ~~Support for graphs (deep toString)~~
+  3. ~~Support for loops in graphs~~
+  4. ~~Support for inheritance (also uses toString of super class)~~
+  5. Support for more scenarios using settings
+    1. Configure the key-value template
+    2. ~~Configure graph blacklist using the path.~~
+    3. Configure inheritance behavior.
+    4. Configure shallow toString behavior.
 3. Implement GetterSetterVerifier
 
 Builder
@@ -38,8 +47,8 @@ Builder
     // Book.java
     public class Book {
     
-        private Person author;
-        private String title;
+        private final Person author;
+        private final String title;
     
         Book(Person author, String title) {
             this.author = author;
@@ -58,6 +67,22 @@ Builder
     // BookTest.java
      @Test
     public void verifyBuilder() {
-        BuilderVerifier.of(Book.class).verify();
+        BuilderVerifier.forClass(Book.class).verify();
+    }
+```
+
+Highly configurable:
+```java
+    public void verifyBuilderWithAllPossibleSettings() {
+        BuilderVerifier.forClass(Book.class)
+                    .allAttributesShouldBeBuildExcept("author")
+                    .allMethodsOnBuilderClassShouldBeUsedExcept("copyTo")
+                    .usingBuilderMethod("buildBook")
+                    .withoutBuildingSuperClasses()
+                    .withoutUsingGettersForVerification()
+                    .withoutVerifyingAttributeAccessibility()
+                    .withPrefixForAllMethodsOnBuilder("with")
+                    .withValueFactories(new MyCustomValueFactory())
+                    .verify();
     }
 ```

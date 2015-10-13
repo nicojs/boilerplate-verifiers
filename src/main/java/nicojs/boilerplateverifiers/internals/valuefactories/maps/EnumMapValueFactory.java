@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.maps;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import nicojs.boilerplateverifiers.internals.valuefactories.primitives.StringValueFactory;
 
 import java.util.EnumMap;
@@ -20,14 +21,14 @@ public class EnumMapValueFactory extends ValueFactory<EnumMap> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public EnumMap next() {
+    public EnumMap next(GraphCreationContext graphCreationContext) {
         if(CURRENT_NUMBER == Number.ONE){
             CURRENT_NUMBER = Number.TWO;
         }else{
             CURRENT_NUMBER = Number.ONE;
         }
         EnumMap enumMap = new EnumMap(Number.class);
-        enumMap.put(CURRENT_NUMBER, SEED.next());
+        enumMap.put(CURRENT_NUMBER, SEED.next(graphCreationContext));
         return enumMap;
     }
 

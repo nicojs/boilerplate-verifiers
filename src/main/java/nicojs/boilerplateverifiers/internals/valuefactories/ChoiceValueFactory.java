@@ -21,7 +21,7 @@ public abstract class ChoiceValueFactory<T> extends ValueFactory<T> {
     }
 
     @Override
-    public T next() {
+    public T next(GraphCreationContext graphCreationContext) {
         T nextValue = null;
         if (values.length > 0) {
             if (seed < values.length) {

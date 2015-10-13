@@ -1,10 +1,8 @@
 package nicojs.boilerplateverifiers;
 
-import nicojs.boilerplateverifiers.internals.AttributeAccessorMode;
-import nicojs.boilerplateverifiers.internals.BuildPropertyAccessor;
-import nicojs.boilerplateverifiers.internals.BuilderConfiguration;
-import nicojs.boilerplateverifiers.internals.JavaValueFactoryArchitect;
-import nicojs.boilerplateverifiers.internals.ValueFactories;
+import nicojs.boilerplateverifiers.internals.*;
+import nicojs.boilerplateverifiers.internals.ValueProvider;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
@@ -24,7 +22,8 @@ import static org.junit.Assert.fail;
  */
 public class BuilderVerifier {
 
-    private ValueFactories valueFactories;
+    public static final GraphStrategy GRAPH_STRATEGY_FOR_BUILDER = GraphStrategy.SELF_REFERENCING;
+    private ValueProvider valueProvider;
     private List<BuildPropertyAccessor> buildProperties;
     private Object builder;
     private Object buildResult;
@@ -32,7 +31,7 @@ public class BuilderVerifier {
 
     private BuilderVerifier(Class<?> targetClass) {
         configuration = BuilderConfiguration.of(targetClass);
-        valueFactories = new ValueFactories();
+        valueProvider = new ValueProvider();
         buildProperties = new ArrayList<>();
     }
 
@@ -51,7 +50,7 @@ public class BuilderVerifier {
     }
 
     public BuilderVerifier withValueFactories(ValueFactory<?>... valueFactoryOverrides) {
-        valueFactories.putIfNotExists(valueFactoryOverrides);
+        valueProvider.addValueFactory(valueFactoryOverrides);
         return this;
     }
 
@@ -75,8 +74,13 @@ public class BuilderVerifier {
         return this;
     }
 
+    public BuilderVerifier withoutVerifyingAttributeAccessibility() {
+        configuration.setVerifyAttributeAccessibility(false);
+        return this;
+    }
+
     public void verify() {
-        JavaValueFactoryArchitect.fill(valueFactories);
+        JavaValueFactoryArchitect.fill(valueProvider);
         instantiateBuilder();
         inspectBuilderClass();
         verifyBuilderConstructor();
@@ -137,7 +141,9 @@ public class BuilderVerifier {
     private void verifyBuildResult() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
             buildProperty.verifyValue(buildResult);
-            buildProperty.verifyAttributeAccessibility(configuration.getTargetClass());
+            if (configuration.isVerifyAttributeAccessibility()) {
+                buildProperty.verifyAttributeAccessibility(configuration.getTargetClass());
+            }
         }
     }
 
@@ -184,7 +190,7 @@ public class BuilderVerifier {
     private void populateBuilder() {
         for (BuildPropertyAccessor buildProperty : buildProperties) {
             Class<?> propertyClass = buildProperty.getPropertyClass();
-            Object value = valueFactories.provideNextValue(propertyClass);
+            Object value = valueProvider.provideNextValue(propertyClass, new GraphCreationContext(GRAPH_STRATEGY_FOR_BUILDER));
             try {
                 Object builderInstance = buildProperty.populate(value);
                 assertThat(String.format("Builder method for \"%s\" does not return the instance of \"%s\". Add 'return this' as a final statement of the method.",
@@ -206,5 +212,4 @@ public class BuilderVerifier {
             return false;
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,7 +18,7 @@ public class AtomicIntegerValueFactory extends ValueFactory<AtomicInteger> {
     }
 
     @Override
-    public AtomicInteger next() {
+    public AtomicInteger next(GraphCreationContext graphCreationContext) {
         return new AtomicInteger(seed++);
     }
 }

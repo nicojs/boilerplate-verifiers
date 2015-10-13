@@ -46,11 +46,12 @@ public class BuildPropertyAccessor {
                 result.getValue(), is(expectedValue));
     }
 
-    public void verifyAttributeAccessibility(Class<?> targetClass){
+    public void verifyAttributeAccessibility(Class<?> targetClass) {
         final Field field = getAttributeField(targetClass);
-        assertThat(field, is(not(nullValue())));
-        assertThat(String.format("Field \"%s\" of class \"%s\" is not declared final.", field.getName(), field.getDeclaringClass().getSimpleName()),
-                Modifier.isFinal(field.getModifiers()), is(true));
+        if (field != null) {
+            assertThat(String.format("Field \"%s\" of class \"%s\" is not declared final. Use \"withoutVerifyingAttributeAccessibility()\" to ignore this error.", field.getName(), field.getDeclaringClass().getSimpleName()),
+                    Modifier.isFinal(field.getModifiers()), is(true));
+        }
     }
 
     public void verifyPrefix() {
@@ -84,6 +85,7 @@ public class BuildPropertyAccessor {
      * Retrieves the attribute field for which this property accessor is an abstraction
      * This function is recursive, because it might need to retrieve the field from a
      * private attribute forClass one forClass its parent classes
+     *
      * @param clazz the class of the resulting builded object or one of its super classes.
      * @return A field, or null if not found
      */

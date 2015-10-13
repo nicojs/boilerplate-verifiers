@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.primitives;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 /**
  * Represents a FloatValueFactory
@@ -14,7 +15,7 @@ public class FloatValueFactory extends ValueFactory<Float> {
     }
 
     @Override
-    public Float next() {
+    public Float next(GraphCreationContext graphCreationContext) {
         return seed++;
     }
 }

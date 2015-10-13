@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.queues;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.concurrent.SynchronousQueue;
 
@@ -14,7 +15,7 @@ public class SynchronousQueueValueFactory extends ValueFactory<SynchronousQueue>
     }
 
     @Override
-    public SynchronousQueue next() {
+    public SynchronousQueue next(GraphCreationContext graphCreationContext) {
         return new SynchronousQueue(); // Always unique
     }
 }

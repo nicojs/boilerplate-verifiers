@@ -7,6 +7,7 @@ import nicojs.boilerplateverifiers.examples.manual.BuilderClassWithAdditionalMet
 import nicojs.boilerplateverifiers.examples.manual.ClassWithBuilderPrefix;
 import nicojs.boilerplateverifiers.examples.manual.ClassWithWeirdGetter;
 import nicojs.boilerplateverifiers.examples.manual.SubClass;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.containsString;
@@ -195,7 +196,7 @@ public class BuilderVerifierTest {
         final Person person = Person.builder().build();
         BuilderVerifier.forClass(Couple.class).withValueFactories(new ValueFactory<Person>(Person.class) {
             @Override
-            public Person next() {
+            public Person next(GraphCreationContext graphCreationContext) {
                 return person;
             }
         }).verify();
@@ -241,7 +242,14 @@ public class BuilderVerifierTest {
 
     @Test
     public void verify_nonFinalAttribute_fails() {
-        assertError(NonFinalAttribute.class, "Field \"notFinal\" of class \"NonFinalAttribute\" is not declared final.");
+        assertError(NonFinalAttribute.class, "Field \"notFinal\" of class \"NonFinalAttribute\" is not declared final. Use \"withoutVerifyingAttributeAccessibility()\" to ignore this error.");
+    }
+
+    @Test
+    public void verify_withoutVerifyingAttributeAccessibility_passes(){
+        BuilderVerifier.forClass(NonFinalAttribute.class)
+                .withoutVerifyingAttributeAccessibility()
+                .verify();
     }
 
     private void assertError(Class clazz, String expectedSubstring) {
@@ -267,9 +275,9 @@ public class BuilderVerifierTest {
         } catch (AssertionError error) {
             caught = true;
             assertThat(error.getMessage(), containsString("Value used to build was not equal to value after build for property"));
-            boolean containsMap = error.getMessage().contains("\"" + first + "\"");
-            boolean containsHashMap = error.getMessage().contains("\"" + second + "\"");
-            assertThat(containsHashMap || containsMap, is(true));
+            boolean containsFirst = error.getMessage().contains("\"" + first + "\"");
+            boolean containsSecond = error.getMessage().contains("\"" + second + "\"");
+            assertThat(containsSecond || containsFirst, is(true));
         }
         assertThat(caught, is(true));
     }

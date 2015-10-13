@@ -1,6 +1,7 @@
 package nicojs.boilerplateverifiers.internals.valuefactories.sets;
 
 import nicojs.boilerplateverifiers.ValueFactory;
+import nicojs.boilerplateverifiers.internals.valuefactories.GraphCreationContext;
 
 import java.util.BitSet;
 import java.util.Random;
@@ -21,7 +22,7 @@ public class BitSetValueFactory extends ValueFactory<BitSet> {
     }
 
     @Override
-    public BitSet next() {
+    public BitSet next(GraphCreationContext graphCreationContext) {
         BitSet next = new BitSet(100);
         if (seed < 100) {
             next.set(seed);
